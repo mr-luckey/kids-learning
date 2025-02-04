@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    ".dart_tool": true,
+    ".idea": true,
+    ".vscode": true,
+    "build": true,
+    "ios": true,
+    "test": true,
+    "windows": true,
+    "kids.iml": true,
+    "README.md": true
+  },
+  "java.configuration.updateBuildConfiguration": "disabled"
+}

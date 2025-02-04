@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class NumberSound extends StatefulWidget {
@@ -27,13 +28,15 @@ class _NumberSoundState extends State<NumberSound> {
 
     final _controller = new PageController();
     return Scaffold(
+        backgroundColor: LetsStartLearningbgcolor,
         appBar: AppBar(
           elevation: 0,
           title: Text(
             'Number',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           ),
-          backgroundColor: Colors.orange[50],
+          backgroundColor: LetsStartLearningbgcolor,
         ),
         body: Container(
           height: 650,
@@ -51,9 +54,10 @@ class _NumberSoundState extends State<NumberSound> {
                   children: [
                 Flexible(
                     child: Card(
+                  color: LetsStartLearningbgcolor,
                   margin: EdgeInsets.all(20),
                   elevation: 5,
-                  shadowColor: Colors.redAccent,
+                  // shadowColor: Colors.redAccent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: PageView.builder(

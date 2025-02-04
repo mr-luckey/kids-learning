@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/ShapeSound.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class Shapes extends StatefulWidget {
@@ -15,13 +16,14 @@ class _ShapesState extends State<Shapes> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.orange[50],
+          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
+          backgroundColor: LetsStartLearningbgcolor,
           elevation: 0,
           title: Center(
               child: Text(
             'Shape',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           )),
         ),
         body: Padding(
@@ -39,7 +41,7 @@ class _ShapesState extends State<Shapes> {
                 int index,
               ) {
                 return InkWell(
-                    splashColor: Colors.redAccent,
+                    // splashColor: Colors.redAccent,
                     onTap: () {
                       print(shapelist);
                       Navigator.push(
@@ -49,12 +51,12 @@ class _ShapesState extends State<Shapes> {
                           ));
                     },
                     child: Card(
-                      color: Color(0xFFFEF9E4),
+                      color: LetsStartLearningbgcolor,
                       elevation: 5,
                       margin: EdgeInsets.all(10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      shadowColor: Colors.redAccent,
+                      shadowColor: LetsStartLearningTextColor,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +68,8 @@ class _ShapesState extends State<Shapes> {
                             Text(
                               shapelist[index].Text!,
                               style: TextStyle(
-                                  color: Colors.black, fontFamily: "arlrdbd"),
+                                  color: LetsStartLearningTextColor,
+                                  fontFamily: "arlrdbd"),
                             )
                           ]),
                     ));

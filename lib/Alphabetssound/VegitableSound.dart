@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class VegitableSound extends StatefulWidget {
@@ -30,18 +31,21 @@ class _VegitableSoundState extends State<VegitableSound> {
 
     final _controller = new PageController();
     return Scaffold(
+        backgroundColor: LetsStartLearningbgcolor,
         appBar: AppBar(
           elevation: 0,
           title: Text(
             'Vegetable',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           ),
-          backgroundColor: Colors.orange[50],
+          backgroundColor: LetsStartLearningbgcolor,
         ),
         body: Container(
           height: 650,
           width: 500,
           decoration: BoxDecoration(
+            // color: LetsStartLearningbgcolor,
             image: DecorationImage(
                 fit: BoxFit.fitHeight,
                 image: AssetImage("assets/images/Union 12.png")),
@@ -54,9 +58,10 @@ class _VegitableSoundState extends State<VegitableSound> {
                   children: [
                 Flexible(
                   child: Card(
+                    color: LetsStartLearningbgcolor,
                     margin: EdgeInsets.all(20),
                     elevation: 5,
-                    shadowColor: Colors.redAccent,
+                    // shadowColor: LetsStartLearningTextColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: PageView.builder(

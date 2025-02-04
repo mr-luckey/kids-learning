@@ -12,391 +12,156 @@ import 'package:kids/Quiz/NumberQuiz.dart';
 import 'package:kids/Quiz/ShapeQuiz.dart';
 import 'package:kids/Quiz/VegitableQuiz.dart';
 import 'package:kids/utils/admob.dart';
+import 'package:kids/utils/app_constrant.dart';
 
 class LookAndChooes extends StatelessWidget {
-  int index;
+  final int index;
   LookAndChooes(this.index);
+
+  // Define grid items structure
+  final List<Map<String, dynamic>> gridItems = [
+    {
+      'title': 'ABC Songs',
+      'image': 'assets/images/Alphabet.png',
+      'route': ABCQuiz(),
+    },
+    {
+      'title': 'Number Songs',
+      'image': 'assets/images/Numbers.png',
+      'route': Numberquiz(),
+    },
+    {
+      'title': 'Color Songs',
+      'image': 'assets/images/Color.png',
+      'route': Colorquiz(),
+    },
+    {
+      'title': 'Shape Songs',
+      'image': 'assets/images/Shapes.png',
+      'route': Shapequiz(),
+    },
+    {
+      'title': 'Animal Songs',
+      'image': 'assets/images/Animals.png',
+      'route': AnimalQuiz(),
+    },
+    {
+      'title': 'Bird Songs',
+      'image': 'assets/images/Birds.png',
+      'route': Birdquiz(),
+    },
+    {
+      'title': 'Flower Songs',
+      'image': 'assets/images/Flowers.png',
+      'route': Flowerquiz(),
+    },
+    {
+      'title': 'Fruit Songs',
+      'image': 'assets/images/Fruit.png',
+      'route': Fruitquiz(),
+    },
+    {
+      'title': 'Month Songs',
+      'image': 'assets/images/Month.png',
+      'route': Monthquiz(),
+    },
+    {
+      'title': 'Vegetable Songs',
+      'image': 'assets/images/Vegitable.png',
+      'route': Vegitablequiz(),
+    },
+  ];
+
+  // Reusable grid item widget
+  Widget _buildGridItem(BuildContext context, Map<String, dynamic> item) {
+    return InkWell(
+      // splashColor: Colors.orange[100],
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => item['route']),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: LookAndChooesbgcolor,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              item['image'],
+              height: 90,
+            ),
+            Container(
+              height: 45,
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // color: Colors.orange[100],
+              ),
+              child: Center(
+                child: Text(
+                  item['title'],
+                  style: const TextStyle(
+                    color: LookAndChooestextcolor,
+                    fontFamily: "arlrdbd",
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black,
+        iconTheme: const IconThemeData(
+          color: LookAndChooestextcolor,
         ),
-        backgroundColor: Color(0xFFFEF7F0),
+        backgroundColor: LookAndChooesbgcolor,
         elevation: 0,
-        title: Center(
-            child: Text(
-          'Look And Chooes',
-          style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
-        )),
+        title: const Center(
+          child: Text(
+            'Look And Chooes',
+            style: TextStyle(
+              color: LookAndChooestextcolor,
+              fontFamily: "arlrdbd",
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
-            child: GridView.count(
-                padding: EdgeInsets.all(35),
+            child: GridView.builder(
+              padding: const EdgeInsets.all(35),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 20,
-                crossAxisCount: 2,
-                primary: false,
-                children: [
-                  InkWell(
-                    splashColor: Colors.redAccent,
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ABCQuiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/Alphabet.png',
-                              height: 90,
-                            ),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'ABC Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Numberquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Numbers.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Number Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Colorquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Color.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Color Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Shapequiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Shapes.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Shape Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AnimalQuiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Animals.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Animal Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Birdquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Birds.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Bird Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Flowerquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Flowers.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Flower Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Fruitquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Fruit.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Fruit Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Monthquiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Month.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Month Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Vegitablequiz()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Vegitable.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Vegetable Songs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  )
-                ]),
+              ),
+              itemCount: gridItems.length,
+              itemBuilder: (context, index) =>
+                  _buildGridItem(context, gridItems[index]),
+            ),
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        height: MediaQuery.of(context).size.width * 0.13,
-        width: 25,
-        child: AdWidget(
-          ad: AdmobHelper.getBannerAd()..load(),
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   height: MediaQuery.of(context).size.width * 0.13,
+      //   width: 25,
+      //   child: AdWidget(
+      //     ad: AdmobHelper.getBannerAd()..load(),
+      //   ),
+      // ),
     );
   }
 }

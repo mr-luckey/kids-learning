@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/AnimalsSound.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class Animal extends StatefulWidget {
@@ -15,13 +16,14 @@ class _AnimalState extends State<Animal> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.orange[50],
+          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
+          backgroundColor: LetsStartLearningbgcolor,
           elevation: 0,
           title: Center(
               child: Text(
             'Animal',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           )),
         ),
         body: Padding(
@@ -39,9 +41,9 @@ class _AnimalState extends State<Animal> {
                 int index,
               ) {
                 return InkWell(
-                    splashColor: Colors.redAccent,
+                    // splashColor: Colors.redAccent,
                     onTap: () {
-                      print(animallist);
+                      // print(animallist);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -49,12 +51,12 @@ class _AnimalState extends State<Animal> {
                           ));
                     },
                     child: Card(
-                      color: Color(0xFFFEF9E4),
+                      color: LetsStartLearningbgcolor,
                       elevation: 5,
                       margin: EdgeInsets.all(10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      shadowColor: Colors.redAccent,
+                      shadowColor: LetsStartLearningTextColor,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +68,8 @@ class _AnimalState extends State<Animal> {
                             Text(
                               animallist[index].Text!,
                               style: TextStyle(
-                                  color: Colors.black, fontFamily: "arlrdbd"),
+                                  color: LetsStartLearningTextColor,
+                                  fontFamily: "arlrdbd"),
                             )
                           ]),
                     ));

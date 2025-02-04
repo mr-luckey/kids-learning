@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/FruitSound.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class Fruits extends StatefulWidget {
@@ -15,13 +16,14 @@ class _FruitsState extends State<Fruits> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.orange[50],
+          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
+          backgroundColor: LetsStartLearningbgcolor,
           elevation: 0,
           title: Center(
               child: Text(
             'Fruit',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           )),
         ),
         body: Padding(
@@ -39,7 +41,7 @@ class _FruitsState extends State<Fruits> {
                 int index,
               ) {
                 return InkWell(
-                    splashColor: Colors.redAccent,
+                    // splashColor: Colors.redAccent,
                     onTap: () {
                       print(FRUITlist);
                       Navigator.push(
@@ -49,12 +51,12 @@ class _FruitsState extends State<Fruits> {
                           ));
                     },
                     child: Card(
-                      color: Color(0xFFFEF9E4),
+                      color: LetsStartLearningbgcolor,
                       elevation: 5,
                       margin: EdgeInsets.all(10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      shadowColor: Colors.redAccent,
+                      shadowColor: LetsStartLearningTextColor,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +68,8 @@ class _FruitsState extends State<Fruits> {
                             Text(
                               FRUITlist[index].Text!,
                               style: TextStyle(
-                                  color: Colors.black, fontFamily: "arlrdbd"),
+                                  color: LetsStartLearningTextColor,
+                                  fontFamily: "arlrdbd"),
                             )
                           ]),
                     ));

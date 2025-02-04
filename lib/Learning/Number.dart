@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/NumberSound.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class Numbers extends StatefulWidget {
@@ -15,13 +16,14 @@ class _NumbersState extends State<Numbers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.orange[50],
+        iconTheme: IconThemeData(color: LetsStartLearningTextColor),
+        backgroundColor: LetsStartLearningbgcolor,
         elevation: 0,
         title: Center(
             child: Text(
           'Number',
-          style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+          style: TextStyle(
+              color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
         )),
       ),
       body: Container(
@@ -37,7 +39,7 @@ class _NumbersState extends State<Numbers> {
             int index,
           ) {
             return InkWell(
-                splashColor: Colors.redAccent,
+                // splashColor: Colors.redAccent,
                 onTap: () {
                   Navigator.push(
                       context,
@@ -50,12 +52,12 @@ class _NumbersState extends State<Numbers> {
                   width: 50,
                   height: 50,
                   child: Card(
-                    color: Color(0xFFFEF9E4),
+                    color: LetsStartLearningbgcolor,
                     elevation: 5,
                     margin: EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    shadowColor: Colors.redAccent,
+                    shadowColor: LetsStartLearningTextColor,
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +92,7 @@ class _NumbersState extends State<Numbers> {
                                 Text(
                                   list[index].Text!,
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: LetsStartLearningTextColor,
                                       fontFamily: "arlrdbd",
                                       fontSize: 15),
                                 ),

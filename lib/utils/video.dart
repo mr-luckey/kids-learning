@@ -28,7 +28,7 @@ class _VideoAppState extends State<VideoApp> {
     return Center(
       child: _controller.value.isInitialized
           ? Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
                 child: Container(

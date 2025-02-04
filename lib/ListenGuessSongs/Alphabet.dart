@@ -4,6 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:kids/bottomnavigation.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
@@ -32,13 +33,14 @@ class _AlphabetSongState extends State<AlphabetSong> {
         backgroundColor: Colors.white,
         appBar: AppBar(
             iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
-            ),
-            backgroundColor: Color(0xFFFEF7F0),
+                color: listenandgessTextcolor //change your color here
+                ),
+            backgroundColor: listenandgessbgcolor,
             title: Center(
               child: Text(
                 'Alphabet',
-                style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+                style: TextStyle(
+                    color: listenandgessTextcolor, fontFamily: "arlrdbd"),
               ),
             )),
         body: Center(
@@ -119,40 +121,11 @@ class _AlphabetSongState extends State<AlphabetSong> {
                                               isPressed = true;
                                             });
                                             score += 1;
-                                            QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.success,
-                                              title: 'Correct',
-                                              // showCancelBtn: false,
-                                              autoCloseDuration:
-                                                  const Duration(seconds: 1),
-                                            );
-                                            // print(score);
-                                            // MotionToast.success(
-                                            //     borderRadius: 5,
-                                            //     animationDuration: Duration(seconds: 3),
-                                            //     title: Text("Your Answer is Right",style: TextStyle(fontSize: 20),),
-                                            //     iconType: IconType.cupertino
-                                            // ).show(context);
                                           } else {
                                             setState(() {
                                               isPressed = true;
                                             });
-                                            QuickAlert.show(
-                                                context: context,
-                                                type: QuickAlertType.error,
-                                                title: 'Wrong',
-//   text: 'Thats a wrong answer',
-// showCancelBtn: false,
-
-                                                autoCloseDuration:
-                                                    Duration(seconds: 1));
-                                            // MotionToast.error(
-                                            //     borderRadius: 5,
-                                            //     animationDuration: Duration(seconds: 6),
-                                            //     title: Text("Your Answer is Wrong",style: TextStyle(fontSize: 20),),
-                                            //     iconType: IconType.cupertino,
-                                            // ).show(context);
+//
                                           }
                                         },
                                   child: Image(

@@ -4,6 +4,8 @@ import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:kids/Pages/LookAndChooes.dart';
 import 'package:kids/bottomnavigation.dart';
+import 'package:kids/homeScreen.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
@@ -21,7 +23,7 @@ class _ABCQuizState extends State<ABCQuiz> {
   bool isPressed = false;
   bool isselected = false;
 // int i;
-  Color istrue = Color(0xFFF19335);
+  Color istrue = Color.fromARGB(255, 65, 255, 7);
   Color isWrong = Color(0xFFFF0000);
   Color isselect = Colors.white;
   int score = 0;
@@ -32,13 +34,14 @@ class _ABCQuizState extends State<ABCQuiz> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: LookAndChooestextcolor,
         ),
-        backgroundColor: Color(0xFFFEF7F0),
+        backgroundColor: LookAndChooesbgcolor,
         title: Center(
             child: Text(
           'Alphabet',
-          style: TextStyle(fontFamily: "arlrdbd", color: Colors.black),
+          style:
+              TextStyle(fontFamily: "arlrdbd", color: LookAndChooestextcolor),
         )),
       ),
       body: Center(
@@ -108,42 +111,10 @@ class _ABCQuizState extends State<ABCQuiz> {
                                             isPressed = true;
                                           });
                                           score += 1;
-                                          print(score);
-                                          QuickAlert.show(
-                                            context: context,
-                                            type: QuickAlertType.success,
-                                            title: 'Correct',
-
-                                            // showCancelBtn: false,
-                                            autoCloseDuration:
-                                                const Duration(seconds: 1),
-                                          );
-                                          // MotionToast.success(
-                                          //     borderRadius: 5,
-                                          //     animationDuration: Duration(seconds: 2),
-                                          //     title: Text("Your Answer is Right",style: TextStyle(fontSize: 20),),
-                                          //     iconType: IconType.cupertino
-                                          // ).show(context);
                                         } else {
                                           setState(() {
                                             isPressed = true;
                                           });
-                                          QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.error,
-                                              title: 'Wrong',
-//   text: 'Thats a wrong answer',
-
-// showCancelBtn: false,
-
-                                              autoCloseDuration:
-                                                  const Duration(seconds: 1));
-                                          // MotionToast.error(
-                                          //     borderRadius: 5,
-                                          //     animationDuration: Duration(seconds: 2),
-                                          //     title: Text("Your Answer is Wrong",style: TextStyle(fontSize: 20),),
-                                          //     iconType: IconType.cupertino
-                                          // ).show(context);
                                         }
                                       },
                                 child: Text(
@@ -161,9 +132,10 @@ class _ABCQuizState extends State<ABCQuiz> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Align(
-                            heightFactor: 3,
+                            heightFactor: 5,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
+                                backgroundColor: LookAndChooesbgcolor,
                                 shape: BeveledRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -184,14 +156,19 @@ class _ABCQuizState extends State<ABCQuiz> {
                                               curve: Curves.linear);
                                         }
                                   : null,
-                              child: Text(
-                                index + 1 == questions.length
-                                    ? "See Result"
-                                    : "Next Question",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.black,
-                                  fontFamily: "arlrdbd",
+                              child: SizedBox(
+                                height: 50,
+                                child: Center(
+                                  child: Text(
+                                    index + 1 == questions.length
+                                        ? "See Result"
+                                        : "Next Question",
+                                    style: TextStyle(
+                                      fontSize: 30.0,
+                                      color: LookAndChooestextcolor,
+                                      fontFamily: "arlrdbd",
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -221,6 +198,7 @@ class _ResultSrceenState extends State<ResultSrceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LookAndChooesbgcolor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -229,13 +207,15 @@ class _ResultSrceenState extends State<ResultSrceen> {
               child: Text(
             "Congratulation",
             style: TextStyle(
-                color: Colors.black, fontFamily: "arlrdbd", fontSize: 38.0),
+                color: LookAndChooestextcolor,
+                fontFamily: "arlrdbd",
+                fontSize: 38.0),
           )),
           Center(
               child: Text(
             "Your Score is:",
             style: TextStyle(
-                color: Colors.black,
+                color: LookAndChooestextcolor,
                 fontFamily: "arlrdbd",
                 fontSize: 25.0,
                 fontWeight: FontWeight.w500),
@@ -247,21 +227,23 @@ class _ResultSrceenState extends State<ResultSrceen> {
               child: Text(
             "${widget.score}",
             style: TextStyle(
-                color: Colors.black, fontFamily: "arlrdbd", fontSize: 80.0),
+                color: LookAndChooestextcolor,
+                fontFamily: "arlrdbd",
+                fontSize: 80.0),
           )),
           GestureDetector(
-            onTap: () => Get.to(BottomNav()),
+            onTap: () => Get.to(HomeScreen()),
             child: Container(
               height: 50,
               width: 120,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(color: Colors.redAccent)),
+                  border: Border.all(color: LookAndChooestextcolor)),
               child: Center(
                   child: Text(
                 "OK",
                 style: TextStyle(
-                    color: Colors.redAccent,
+                    color: LookAndChooestextcolor,
                     fontFamily: "arlrdbd",
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500),

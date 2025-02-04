@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/utils/app_constrant.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'package:kids/utils/admob.dart';
 import 'package:kids/utils/model.dart';
@@ -33,16 +34,18 @@ class _AlphaSoundState extends State<AlphaSound> {
 
     final _controller = new PageController();
     return Scaffold(
+      backgroundColor: LetsStartLearningbgcolor,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: LetsStartLearningTextColor,
         ),
-        backgroundColor: Colors.orange[50],
+        backgroundColor: LetsStartLearningbgcolor,
         elevation: 0,
         title: Center(
           child: Text(
             'Alphabet',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           ),
         ),
       ),
@@ -64,9 +67,10 @@ class _AlphaSoundState extends State<AlphaSound> {
                   children: [
                 Flexible(
                   child: Card(
+                    color: LetsStartLearningbgcolor,
                     margin: EdgeInsets.all(20),
                     elevation: 5,
-                    shadowColor: Colors.redAccent,
+                    // shadowColor: Colors.redAccent,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: PageView.builder(

@@ -12,6 +12,7 @@ import 'package:kids/VideoLearning/ShapeVideo.dart';
 import 'package:kids/VideoLearning/VegitableVideo.dart';
 import 'package:kids/VideoLearning/colorvideo.dart';
 import 'package:kids/utils/admob.dart';
+import 'package:kids/utils/app_constrant.dart';
 
 class VideoLearning extends StatefulWidget {
   @override
@@ -19,407 +20,139 @@ class VideoLearning extends StatefulWidget {
 }
 
 class _VideoLearningState extends State<VideoLearning> {
-  AdmobHelper admobHelper = new AdmobHelper();
+  // Define grid items structure
+  final List<Map<String, dynamic>> gridItems = [
+    {
+      'title': 'ABC Video',
+      'image': 'assets/images/Alphabet.png',
+      'route': ABCVideo(),
+    },
+    {
+      'title': 'Number Video',
+      'image': 'assets/images/Numbers.png',
+      'route': NumberVideo(),
+    },
+    {
+      'title': 'Color Video',
+      'image': 'assets/images/Color.png',
+      'route': ColorVideo(),
+    },
+    {
+      'title': 'Shape Video',
+      'image': 'assets/images/Shapes.png',
+      'route': ShapeVideo(),
+    },
+    {
+      'title': 'Animal Video',
+      'image': 'assets/images/Animals.png',
+      'route': AnimalVideo(),
+    },
+    {
+      'title': 'Bird Video',
+      'image': 'assets/images/Birds.png',
+      'route': BirdVideo(),
+    },
+    {
+      'title': 'Flower Video',
+      'image': 'assets/images/Flowers.png',
+      'route': FlowerVideo(),
+    },
+    {
+      'title': 'Fruit Video',
+      'image': 'assets/images/Fruit.png',
+      'route': FruitVideo(),
+    },
+    {
+      'title': 'Month Video',
+      'image': 'assets/images/Month.png',
+      'route': MonthVideo(),
+    },
+    {
+      'title': 'Vegetable Video',
+      'image': 'assets/images/Vegitable.png',
+      'route': VegitableVideo(),
+    },
+  ];
 
-  void initState() {
-    super.initState();
-    admobHelper.createInterad();
+  // Reusable grid item widget
+  Widget _buildGridItem(BuildContext context, Map<String, dynamic> item) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => item['route']),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: videolearnBGcolor,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              item['image'],
+              height: 90,
+            ),
+            Container(
+              height: 45,
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  item['title'],
+                  style: const TextStyle(
+                    color: videolearnTextColor,
+                    fontFamily: "arlrdbd",
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        backgroundColor: Color(0xFFFEF7F0),
-        title: Center(
-            child: Text(
-          'Video Learning',
-          style: TextStyle(color: Color(0xFF000000), fontFamily: "arlrdbd"),
-        )),
+        backgroundColor: videolearnBGcolor,
+        title: const Center(
+          child: Text(
+            'Video Learning',
+            style: TextStyle(
+              color: videolearnTextColor,
+              fontFamily: "arlrdbd",
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
-            child: GridView.count(
-                padding: EdgeInsets.all(35),
+            child: GridView.builder(
+              padding: const EdgeInsets.all(35),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 20,
-                crossAxisCount: 2,
-                primary: false,
-                children: [
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ABCVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/Alphabet.png',
-                              height: 90,
-                            ),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'ABC Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NumberVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Numbers.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Number Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ColorVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Color.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Color Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ShapeVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Shapes.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Shape Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AnimalVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Animals.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Animal Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => BirdVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Birds.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Bird Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FlowerVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Flowers.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Flower Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FruitVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Fruit.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Fruit Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MonthVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Month.png', height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Month Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  ),
-                  InkWell(
-                    splashColor: Colors.orange[100],
-                    onTap: () {
-                      admobHelper.showInterad();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VegitableVideo()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.orange[50],
-                      ),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/Vegitable.png',
-                                height: 90),
-                            Container(
-                                height: 45,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.orange[100]),
-                                child: Center(
-                                    child: Text(
-                                  'Vegetable Video',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: "arlrdbd",
-                                      fontSize: 18),
-                                ))),
-                          ]),
-                    ),
-                  )
-                ]),
+              ),
+              itemCount: gridItems.length,
+              itemBuilder: (context, index) =>
+                  _buildGridItem(context, gridItems[index]),
+            ),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        height: MediaQuery.of(context).size.width * 0.13,
-        width: 25,
-        child: AdWidget(
-          ad: AdmobHelper.getBannerAd()..load(),
-        ),
       ),
     );
   }

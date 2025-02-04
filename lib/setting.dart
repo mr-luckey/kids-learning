@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:kids/privacypolicy.dart';
@@ -34,10 +33,10 @@ class _SettingState extends State<Setting> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        backgroundColor: Color(0xFFFEF7F0),
+        backgroundColor: const Color(0xFFFEF7F0),
         elevation: 0,
       ),
       body: Container(
@@ -99,12 +98,12 @@ class _SettingState extends State<Setting> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color(0xFFE4F2E6),
+                      color: const Color(0xFFE4F2E6),
                       borderRadius: BorderRadius.circular(10)),
                   height: 80,
                   width: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       'Rate Us',
                       textHeightBehavior:
@@ -118,7 +117,7 @@ class _SettingState extends State<Setting> {
                     ),
                   ),
                   alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                 ),
               ),
             ),
@@ -128,15 +127,15 @@ class _SettingState extends State<Setting> {
                 onTap: () {
                   return _Share();
                 },
-                splashColor: Color(0xFFF2CF37),
+                splashColor: const Color(0xFFF2CF37),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color(0xFFFEF9E4),
+                      color: const Color(0xFFFEF9E4),
                       borderRadius: BorderRadius.circular(10)),
                   height: 80,
                   width: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       'Share',
                       textHeightBehavior:

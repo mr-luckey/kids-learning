@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
@@ -16,7 +17,7 @@ List<Numbermodel> flowerlist = FLOWERS1();
 
 class _FlowerquizState extends State<Flowerquiz> {
   bool isPressed = false;
-  Color istrue = Color(0xFFF19335);
+  Color istrue = Color.fromARGB(255, 65, 255, 7);
   Color isWrong = Color(0xFFFF0000);
   Color btnColor = Colors.blue;
   int score = 0;
@@ -27,13 +28,14 @@ class _FlowerquizState extends State<Flowerquiz> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           iconTheme: IconThemeData(
-            color: Colors.black,
+            color: LookAndChooestextcolor,
           ),
-          backgroundColor: Color(0xFFFEF7F0),
+          backgroundColor: LookAndChooesbgcolor,
           title: Center(
               child: Text(
             'Alphabet',
-            style: TextStyle(fontFamily: "arlrdbd", color: Colors.black),
+            style:
+                TextStyle(fontFamily: "arlrdbd", color: LookAndChooestextcolor),
           )),
         ),
         body: Center(
@@ -107,42 +109,10 @@ class _FlowerquizState extends State<Flowerquiz> {
                                               isPressed = true;
                                             });
                                             score += 1;
-                                            print(score);
-                                            QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.success,
-                                              title: 'Correct',
-
-                                              // showCancelBtn: false,
-                                              autoCloseDuration:
-                                                  const Duration(seconds: 1),
-                                            );
-                                            // MotionToast.success(
-                                            //     borderRadius: 5,
-                                            //     animationDuration: Duration(seconds: 2),
-                                            //     title: Text("Your Answer is Right",style: TextStyle(fontSize: 20),),
-                                            //     iconType: IconType.cupertino
-                                            // ).show(context);
                                           } else {
                                             setState(() {
                                               isPressed = true;
                                             });
-                                            QuickAlert.show(
-                                                context: context,
-                                                type: QuickAlertType.error,
-                                                title: 'Wrong',
-//   text: 'Thats a wrong answer',
-
-// showCancelBtn: false,
-
-                                                autoCloseDuration:
-                                                    const Duration(seconds: 1));
-                                            // MotionToast.error(
-                                            //     borderRadius: 5,
-                                            //     animationDuration: Duration(seconds: 2),
-                                            //     title: Text("Your Answer is Wrong",style: TextStyle(fontSize: 20),),
-                                            //     iconType: IconType.cupertino
-                                            // ).show(context);
                                           }
                                         },
                                   child: Text(
@@ -163,7 +133,7 @@ class _FlowerquizState extends State<Flowerquiz> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Align(
-                              heightFactor: 2.7,
+                              heightFactor: 5,
                               child: OutlinedButton(
                                 style: OutlinedButton.styleFrom(
                                   shape: BeveledRectangleBorder(
@@ -191,8 +161,8 @@ class _FlowerquizState extends State<Flowerquiz> {
                                       ? "See Result"
                                       : "Next Question",
                                   style: TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.black,
+                                    fontSize: 30.0,
+                                    color: LookAndChooestextcolor,
                                     fontFamily: "arlrdbd",
                                   ),
                                 ),

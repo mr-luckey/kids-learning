@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kids/Quiz/ABCQuize.dart';
+import 'package:kids/homeScreen.dart';
+// import 'package:kids/Quiz/ABCQuize.dart';
 import 'bottomnavigation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize().then((InitializationStatus status) {
-    print('Initialization done: ${status.adapterStatuses}');
-    MobileAds.instance.updateRequestConfiguration(
-      RequestConfiguration(
-          tagForChildDirectedTreatment:
-              TagForChildDirectedTreatment.unspecified,
-          testDeviceIds: <String>["CAC88306564BDB57C1B5E5A1C7093FF2"]),
-    );
-  });
-  MobileAds.instance.initialize();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await MobileAds.instance.initialize();
+
   runApp(MyApp());
 }
 
@@ -32,7 +24,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       builder: (context, widget) => ResponsiveWrapper.builder(
           BouncingScrollWrapper.builder(context, widget!),
           maxWidth: 1200,
@@ -53,9 +45,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:
-          // ResultSrceen(0),
-          BottomNav(),
+      home: HomeScreen(),
     );
   }
 }

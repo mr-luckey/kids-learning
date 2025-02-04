@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/Alphabetssound/Alphasound.dart';
 import 'package:kids/utils/admob.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
 class Alphabet extends StatefulWidget {
@@ -19,13 +20,14 @@ class _AlphabetState extends State<Alphabet> {
       appBar: AppBar(
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: LetsStartLearningTextColor,
         ),
-        backgroundColor: Colors.orange[50],
+        backgroundColor: LetsStartLearningbgcolor,
         title: Center(
             child: Text(
           'Alphabet',
-          style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+          style: TextStyle(
+              color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
         )),
       ),
       body: Padding(
@@ -43,7 +45,7 @@ class _AlphabetState extends State<Alphabet> {
               int index,
             ) {
               return InkWell(
-                splashColor: Colors.redAccent,
+                // splashColor: Colors.redAccent,
                 onTap: () {
                   print(kidslist);
                   Navigator.push(
@@ -53,12 +55,12 @@ class _AlphabetState extends State<Alphabet> {
                       ));
                 },
                 child: Card(
-                    color: Color(0xFFFEF9E4),
+                    color: LetsStartLearningbgcolor,
                     elevation: 5,
                     margin: EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    shadowColor: Colors.redAccent,
+                    shadowColor: LetsStartLearningbgcolor,
                     child: Center(
                       child: Image.asset(
                         kidslist[index].image!,

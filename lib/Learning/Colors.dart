@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/ColorSound.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class Color extends StatefulWidget {
-  int index;
-  Color(this.index);
+  // int index;
+  Color({Key? key}) : super(key: key);
   @override
   State<Color> createState() => _ColorState();
 }
@@ -19,13 +20,14 @@ class _ColorState extends State<Color> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Colors.orange[50],
+          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
+          backgroundColor: LetsStartLearningbgcolor,
           elevation: 0,
           title: Center(
               child: Text(
             'Color',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           )),
         ),
         body: Padding(
@@ -40,7 +42,7 @@ class _ColorState extends State<Color> {
               ),
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
-                    splashColor: Colors.redAccent,
+                    // splashColor: Colors.redAccent,
                     onTap: () {
                       print(colorlist);
                       Navigator.push(
@@ -50,12 +52,12 @@ class _ColorState extends State<Color> {
                           ));
                     },
                     child: Card(
-                      color: Colors.amber[50],
+                      color: LetsStartLearningbgcolor,
                       elevation: 5,
                       margin: EdgeInsets.all(10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      shadowColor: Colors.redAccent,
+                      shadowColor: LetsStartLearningTextColor,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +69,7 @@ class _ColorState extends State<Color> {
                             Text(
                               colorlist[index].Text!,
                               style: TextStyle(
-                                  color: Colors.redAccent,
+                                  color: LetsStartLearningTextColor,
                                   fontFamily: "arlrdbd"),
                             )
                           ]),

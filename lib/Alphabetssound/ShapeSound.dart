@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 
+// ignore: must_be_immutable
 class ShapeSound extends StatefulWidget {
   int index1;
 
@@ -32,13 +34,15 @@ class _ShapeSoundState extends State<ShapeSound> {
     final _controller = new PageController();
 
     return Scaffold(
+        backgroundColor: LetsStartLearningbgcolor,
         appBar: AppBar(
           elevation: 0,
           title: Text(
             'Shape',
-            style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
+            style: TextStyle(
+                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
           ),
-          backgroundColor: Colors.orange[50],
+          backgroundColor: LetsStartLearningbgcolor,
         ),
         body: Container(
           height: 650,
@@ -56,9 +60,10 @@ class _ShapeSoundState extends State<ShapeSound> {
                   children: [
                 Flexible(
                   child: Card(
+                    color: LetsStartLearningbgcolor,
                     margin: EdgeInsets.all(20),
                     elevation: 5,
-                    shadowColor: Colors.redAccent,
+                    // shadowColor: Colors.redAccent,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: PageView.builder(
