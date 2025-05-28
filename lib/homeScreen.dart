@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
+import 'package:kids/utils/ad_helper.dart';
 import 'package:kids/utils/admob.dart';
 import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/video.dart';
@@ -19,17 +20,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AdmobHelper _admobHelper = AdmobHelper();
+  // final AdmobHelper _admobHelper = AdmobHelper();
   Timer? _adTimer;
 
   @override
   void initState() {
     super.initState();
-    _admobHelper.createInterad(); // Load first ad
+
+    // _admobHelper.createInterad(); // Load first ad
 
     // Show ad every 10 seconds
     _adTimer = Timer.periodic(const Duration(seconds: 40), (Timer timer) {
-      _admobHelper.showInterad();
+      // _admobHelper.showInterad();
     });
   }
 
