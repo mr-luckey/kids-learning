@@ -36,8 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_tts: ^3.3.3
   url_launcher: ^6.0.18
-  flutter_share: ^2.0.0
-  webview_flutter: ^3.0.0
+  share_plus: ^9.0.0
+  webview_flutter: ^4.13.0
   motion_toast:
   google_mobile_ads: ^1.1.0
   responsive_framework: ^0.1.7

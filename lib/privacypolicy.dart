@@ -8,6 +8,16 @@ class PrivacyPolicy extends StatefulWidget {
 }
 
 class _PrivacyPolicyState extends State<PrivacyPolicy> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse("https://flutterbugsolver.blogspot.com/"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +33,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
         backgroundColor: Color(0xFFFEF7F0),
         elevation: 0,
       ),
-      body: WebView(
-        initialUrl: "https://flutterbugsolver.blogspot.com/",
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

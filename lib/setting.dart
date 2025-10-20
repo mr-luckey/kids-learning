@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:kids/privacypolicy.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,10 +22,8 @@ class _SettingState extends State<Setting> {
   }
 
   _Share() async {
-    FlutterShare.share(
-        title: 'SHare',
-        linkUrl: "https://play.google.com/store/apps/details?id=" +
-            "com.appware.kidlearning");
+    Share.share("https://play.google.com/store/apps/details?id=" +
+        "com.appware.kidlearning");
   }
 
   @override

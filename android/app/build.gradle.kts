@@ -14,8 +14,8 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "5"
-val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "5.0"
+val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "6"
+val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "6.0"
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -25,8 +25,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.appware.kidlearning"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk= 35
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,10 +45,14 @@ android {
 
     defaultConfig {
         applicationId = "com.appware.kidlearning"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
+        resourceConfigurations += listOf("en")
     }
 
     signingConfigs {
@@ -63,6 +67,24 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging = false
+        resources {
+            excludes += listOf(
+                "META-INF/LICENSE*",
+                "META-INF/NOTICE*",
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1"
+            )
         }
     }
 }
