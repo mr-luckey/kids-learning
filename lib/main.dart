@@ -5,12 +5,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/homeScreen.dart';
 import 'package:kids/utils/ad_helper.dart';
 // import 'package:kids/Quiz/ABCQuize.dart';
-import 'bottomnavigation.dart';
+// import 'bottomnavigation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
   AdManager().initialize();
 
   runApp(MyApp());

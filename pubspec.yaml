@@ -39,7 +39,7 @@ dependencies:
   share_plus: ^9.0.0
   webview_flutter: ^4.13.0
   motion_toast:
-  google_mobile_ads: ^1.1.0
+  google_mobile_ads: ^5.1.0
   responsive_framework: ^0.1.7
   quickalert: ^1.0.0
   video_player: ^2.9.5

@@ -94,7 +94,7 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.android.gms:play-services-ads:22.3.0")
+    implementation("com.google.android.gms:play-services-ads:22.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25")
-    implementation("com.google.android.material:material:1.1.0-alpha05")
+    implementation("com.google.android.material:material:1.11.0")
 }

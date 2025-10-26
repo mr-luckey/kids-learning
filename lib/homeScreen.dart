@@ -4,14 +4,14 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
 import 'package:kids/utils/ad_helper.dart';
-import 'package:kids/utils/admob.dart';
-import 'package:kids/utils/app_constrant.dart';
+// import 'package:kids/utils/admob.dart';
+// import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/video.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Pages/LookAndChooes.dart';
 import 'Pages/VideoLearning.dart';
 import 'Pages/listen_and_guess.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -20,18 +20,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final AdmobHelper _admobHelper = AdmobHelper();
   Timer? _adTimer;
+  final AdManager _adManager = AdManager();
 
   @override
   void initState() {
     super.initState();
 
-    // _admobHelper.createInterad(); // Load first ad
-
-    // Show ad every 10 seconds
-    _adTimer = Timer.periodic(const Duration(seconds: 40), (Timer timer) {
-      // _admobHelper.showInterad();
+    // Show ad every 5 minutes (300 seconds) - reasonable frequency
+    _adTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_adManager.isAdReady() && _adManager.canShowAd()) {
+        _adManager.showCustomInterstitialAd(context);
+      }
     });
   }
 
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // AdmobHelper admobHelper = new AdmobHelper();
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
 
     Future<bool> showExitPopup() async {
       return await showDialog(
@@ -117,6 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           InkWell(
                             onTap: () {
+                              // Show ad before navigation (if enough time has passed)
+                              if (_adManager.isAdReady() &&
+                                  _adManager.canShowAd()) {
+                                _adManager.showCustomInterstitialAd(context);
+                              }
                               Get.to(() => LetsStartLearning());
                             },
                             child: Container(
@@ -145,12 +150,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
+                              // Show ad before navigation (if enough time has passed)
+                              if (_adManager.isAdReady() &&
+                                  _adManager.canShowAd()) {
+                                _adManager.showCustomInterstitialAd(context);
+                              }
                               Get.to(() => VideoLearning());
-                              // admobHelper.showInterad();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => VideoLearning()));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -178,13 +183,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           InkWell(
                             onTap: () {
+                              // Show ad before navigation (if enough time has passed)
+                              if (_adManager.isAdReady() &&
+                                  _adManager.canShowAd()) {
+                                _adManager.showCustomInterstitialAd(context);
+                              }
                               Get.to(() => LookAndChooes(index));
-                              // admobHelper.showInterad();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             LookAndChooes(index)));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -213,12 +217,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           InkWell(
                             onTap: () {
+                              // Show ad before navigation (if enough time has passed)
+                              if (_adManager.isAdReady() &&
+                                  _adManager.canShowAd()) {
+                                _adManager.showCustomInterstitialAd(context);
+                              }
                               Get.to(() => ListenGuess());
-                              // admobHelper.showInterad();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => ListenGuess()));
                             },
                             child: Container(
                               decoration: BoxDecoration(
