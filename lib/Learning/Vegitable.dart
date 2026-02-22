@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/VegitableSound.dart';
-import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 
 class Vegitable extends StatefulWidget {
   @override
@@ -15,18 +16,31 @@ class _VegitableState extends State<Vegitable> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
-          backgroundColor: LetsStartLearningbgcolor,
-          elevation: 0,
-          title: Center(
-              child: Text(
-            'Vegetable',
-            style: TextStyle(
-                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
-          )),
-        ),
-        body: Padding(
+        body: AdventureBackground(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: const Color(0xFF1A5F7A),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Expanded(
+                        child: AdventureTitle(
+                          text: 'Vegetable',
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
           padding: const EdgeInsets.all(15),
           child: Container(
             child: GridView.builder(
@@ -40,40 +54,42 @@ class _VegitableState extends State<Vegitable> {
                 BuildContext context,
                 int index,
               ) {
-                return InkWell(
-                    // splashColor: Colors.redAccent,
+                final gradients = [
+                  [Color(0xFFB8E6F5), Color(0xFFFFE5A8)],
+                  [Color(0xFFFFB5D0), Color(0xFFFFE5A8)],
+                  [Color(0xFFA8E6A0), Color(0xFFB8D4F0)],
+                ];
+                return AdventureCard(
                     onTap: () {
-                      print(vegitablelist);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => VegitableSound(index),
                           ));
                     },
-                    child: Card(
-                      color: LetsStartLearningbgcolor,
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      shadowColor: LetsStartLearningTextColor,
+                    gradientColors: gradients[index % gradients.length],
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image.asset(
                               vegitablelist[index].image!,
-                              height: 120,
+                              height: 100,
                             ),
-                            Text(
-                              vegitablelist[index].Text!,
-                              style: TextStyle(
-                                  color: LetsStartLearningTextColor,
-                                  fontFamily: "arlrdbd"),
-                            )
+                            const SizedBox(height: 8),
+                            AdventureText(
+                              text: vegitablelist[index].Text!,
+                              fontSize: 14,
+                            ),
                           ]),
                     ));
               },
+            ),
+          ),
+        ),
+                ),
+              ],
             ),
           ),
         ));

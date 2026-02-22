@@ -6,6 +6,8 @@ import 'package:get/route_manager.dart';
 import 'package:kids/bottomnavigation.dart';
 import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:quickalert/quickalert.dart';
@@ -30,20 +32,31 @@ class _AlphabetSongState extends State<AlphabetSong> {
     PageController _controller = new PageController(initialPage: 0);
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            iconTheme: IconThemeData(
-                color: listenandgessTextcolor //change your color here
+        body: AdventureBackground(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: const Color(0xFF1A5F7A),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Expanded(
+                        child: AdventureTitle(
+                          text: 'Alphabet',
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
                 ),
-            backgroundColor: listenandgessbgcolor,
-            title: Center(
-              child: Text(
-                'Alphabet',
-                style: TextStyle(
-                    color: listenandgessTextcolor, fontFamily: "arlrdbd"),
-              ),
-            )),
-        body: Center(
+                Expanded(
+                  child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,6 +214,11 @@ class _AlphabetSongState extends State<AlphabetSong> {
               ),
             ],
           ),
+                ),
+              ),
+            ],
+          ),
+        ),
         ));
   }
 }

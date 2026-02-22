@@ -1,7 +1,6 @@
 // google ad ids
 
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
 import 'package:kids/Pages/LookAndChooes.dart';
 
@@ -11,12 +10,19 @@ const android_Google_interstitial =
 const ios_Google_banner = "ca-app-pub-3940256099942544/2934735716";
 const ios_Google_interstitial = "ca-app-pub-3940256099942544/4411468910";
 
-const appcolor = Color.fromARGB(255, 146, 239, 166);
-const videolearnBGcolor = Color.fromARGB(255, 255, 237, 223);
-const videolearnTextColor = Color(0xFFEC9E4E);
-const LookAndChooesbgcolor = Color.fromARGB(255, 255, 250, 230);
-const LookAndChooestextcolor = Color.fromARGB(255, 255, 217, 46);
-const listenandgessbgcolor = Color.fromARGB(255, 239, 236, 255);
-const listenandgessTextcolor = Color(0xFF8770E4);
-const LetsStartLearningbgcolor = const Color.fromARGB(255, 220, 255, 228);
-const LetsStartLearningTextColor = Color.fromARGB(255, 5, 174, 41);
+// New kid-friendly palette (vibrant but soft)
+const appcolor = Color(0xFF92EFA6);
+const appBarStart = Color(0xFF6DD5ED);
+const appBarEnd = Color(0xFF92EFA6);
+const scaffoldBgStart = Color(0xFFFFF8F0);
+const scaffoldBgEnd = Color(0xFFF0F9FF);
+const cardShadowColor = Color(0x1A000000);
+
+const videolearnBGcolor = Color(0xFFFFE5D9);
+const videolearnTextColor = Color(0xFFE85D4C);
+const LookAndChooesbgcolor = Color(0xFFFFF9E3);
+const LookAndChooestextcolor = Color(0xFFD4A017);
+const listenandgessbgcolor = Color(0xFFE8E0F0);
+const listenandgessTextcolor = Color(0xFF6B5B95);
+const LetsStartLearningbgcolor = Color(0xFFD4F5DC);
+const LetsStartLearningTextColor = Color(0xFF2E7D32);

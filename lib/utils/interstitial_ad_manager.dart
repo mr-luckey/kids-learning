@@ -13,7 +13,7 @@ class InterstitialAdManager {
   static int _currentAdIndex = 0;
   static bool _isAdShown = false;
   static DateTime? _lastAdShown;
-  static const int _minAdInterval = 180; // Minimum 3 minutes between ads
+  static const int _minAdInterval = 30; // Minimum 3 minutes between ads
 
   // Add your 10 ad unit IDs here
   static final List<String> _adUnitIds = [

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kids/utils/admob.dart';
+// import 'package:kids/utils/admob.dart';
 import 'package:kids/utils/model.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 
 class ColorVideo extends StatefulWidget {
   @override
@@ -21,19 +23,31 @@ class _ColorVideoState extends State<ColorVideo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-        backgroundColor: Color(0xFFFEF7F0),
-        elevation: 0,
-        title: Center(
-            child: Text(
-          'Colors Video Songs',
-          style: TextStyle(color: Colors.black, fontFamily: "arlrdbd"),
-        )),
-      ),
-      body: Container(
+      body: AdventureBackground(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      color: const Color(0xFF1A5F7A),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Expanded(
+                      child: AdventureTitle(
+                        text: 'Color Video',
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
         child: GridView.builder(
           itemCount: colorvideolist.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,43 +59,38 @@ class _ColorVideoState extends State<ColorVideo> {
             BuildContext context,
             int index,
           ) {
-            return InkWell(
-              splashColor: Colors.redAccent,
-              onTap: () {
-                _launchYoutubeVideo(colorvideoURLlist[index]);
-                print(colorvideoURLlist[index]);
-              },
-              child: Card(
-                color: Color(0xFFEBE8FD),
-                elevation: 5,
-                margin: EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                shadowColor: Colors.redAccent,
+            final gradients = [
+              [Color(0xFFB8E6F5), Color(0xFFFFE5A8)],
+              [Color(0xFFFFB5D0), Color(0xFFFFE5A8)],
+              [Color(0xFFA8E6A0), Color(0xFFB8D4F0)],
+            ];
+            return AdventureCard(
+              onTap: () => _launchYoutubeVideo(colorvideoURLlist[index]),
+              gradientColors: gradients[index % gradients.length],
+              child: Padding(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(colorvideolist[index].image!,
                           fit: BoxFit.fill,
                           alignment: Alignment.topCenter,
-                          height: 122),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                            child: Text(
-                          colorvideolist[index].Text!,
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              fontFamily: "arlrdbd",
-                              fontSize: 15),
-                        )),
-                      )
-                    ]),
-              ),
-            );
+                          height: 100),
+                      const SizedBox(height: 8),
+                      AdventureText(
+                        text: colorvideolist[index].Text!,
+                        fontSize: 14,
+                      ),
+                    ],
+                  ),
+                ),
+              );
           },
+        ),
+              ),
+              ),
+            ],
+          ),
         ),
       ),
       // bottomNavigationBar: Container(

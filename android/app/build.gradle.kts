@@ -14,8 +14,8 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "6"
-val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "6.0"
+val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "12"
+val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "10.0"
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -25,8 +25,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.appware.kidlearning"
-    compileSdk= 35
-    ndkVersion = "27.0.12077973"
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId = "com.appware.kidlearning"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
@@ -95,6 +95,6 @@ flutter {
 
 dependencies {
     implementation("com.google.android.gms:play-services-ads:22.6.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.0")
     implementation("com.google.android.material:material:1.11.0")
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 
 class MonthSound extends StatefulWidget {
   int index;
@@ -31,17 +32,31 @@ class _MonthSoundState extends State<MonthSound> {
 
     final _controller = new PageController();
     return Scaffold(
-        backgroundColor: LetsStartLearningbgcolor,
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'Month',
-            style: TextStyle(
-                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
-          ),
-          backgroundColor: LetsStartLearningbgcolor,
-        ),
-        body: Container(
+        body: AdventureBackground(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: const Color(0xFF1A5F7A),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Expanded(
+                        child: AdventureTitle(
+                          text: 'Month',
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
           height: 650,
           width: 500,
           decoration: BoxDecoration(
@@ -56,14 +71,14 @@ class _MonthSoundState extends State<MonthSound> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                 Flexible(
-                  child: Card(
-                    color: LetsStartLearningbgcolor,
-                    margin: EdgeInsets.all(20),
-                    elevation: 5,
-                    // shadowColor: Colors.redAccent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: PageView.builder(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: AdventureCard(
+                      gradientColors: const [
+                        Color(0xFFB8E6F5),
+                        Color(0xFFFFE5A8),
+                      ],
+                      child: PageView.builder(
                       controller: _controller,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: monthlist.length,
@@ -75,6 +90,7 @@ class _MonthSoundState extends State<MonthSound> {
                           ),
                         );
                       },
+                    ),
                     ),
                   ),
                 ),
@@ -120,7 +136,11 @@ class _MonthSoundState extends State<MonthSound> {
                     ),
                   )
                 ])
-              ])),
+              ]))),
+                ),
+              ],
+            ),
+          ),
         ));
   }
 }

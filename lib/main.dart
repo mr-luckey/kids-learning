@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/homeScreen.dart';
 import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/app_constrant.dart';
 // import 'package:kids/Quiz/ABCQuize.dart';
 // import 'bottomnavigation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -39,12 +40,40 @@ class _MyAppState extends State<MyApp> {
             const ResponsiveBreakpoint.resize(1200, name: DESKTOP),
             const ResponsiveBreakpoint.autoScale(2460, name: "4K"),
           ],
-          background: Container(color: Color(0xFFF5F5F5))),
+          background: Container(color: scaffoldBgStart)),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        primarySwatch: Colors.green,
-        textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
+        useMaterial3: true,
+        scaffoldBackgroundColor: scaffoldBgStart,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6DD5ED),
+          primary: const Color(0xFF6DD5ED),
+          secondary: const Color(0xFF92EFA6),
+          surface: Colors.white,
+          brightness: Brightness.light,
+        ),
+        primarySwatch: Colors.cyan,
+        fontFamily: "arlrdbd",
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          centerTitle: true,
+          foregroundColor: Color(0xFF1A5F7A),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 2,
+            shadowColor: Colors.black26,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        ),
+        cardTheme: CardThemeData(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomeScreen(),

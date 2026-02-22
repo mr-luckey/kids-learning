@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:kids/privacypolicy.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends StatefulWidget {
@@ -30,14 +32,31 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        backgroundColor: const Color(0xFFFEF7F0),
-        elevation: 0,
-      ),
-      body: Container(
+      body: AdventureBackground(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      color: const Color(0xFF1A5F7A),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Expanded(
+                      child: AdventureTitle(
+                        text: 'Settings',
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
         child: Column(
           children: [
             Container(
@@ -88,69 +107,68 @@ class _SettingState extends State<Setting> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  return _openMap();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: const Color(0xFFE4F2E6),
-                      borderRadius: BorderRadius.circular(10)),
-                  height: 80,
-                  width: 300,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Rate Us',
-                      textHeightBehavior:
-                          TextHeightBehavior(applyHeightToFirstAscent: true),
-                      style: TextStyle(
-                        color: Color(0xFF5EA763),
-                        fontFamily: "arlrdbd",
-                        fontSize: 20,
+              Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: AdventureCard(
+                onTap: _openMap,
+                gradientColors: const [
+                  Color(0xFFD4F5DC),
+                  Color(0xFFA8E6CF),
+                ],
+                child: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.star_rounded, color: Color(0xFF2E7D32), size: 28),
+                      SizedBox(width: 12),
+                      Text(
+                        'Rate Us',
+                        style: TextStyle(
+                          color: Color(0xFF2E7D32),
+                          fontFamily: "arlrdbd",
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      textAlign: TextAlign.left,
-                    ),
+                    ],
                   ),
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.all(10),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  return _Share();
-                },
-                splashColor: const Color(0xFFF2CF37),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: const Color(0xFFFEF9E4),
-                      borderRadius: BorderRadius.circular(10)),
-                  height: 80,
-                  width: 300,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Share',
-                      textHeightBehavior:
-                          TextHeightBehavior(applyHeightToFirstAscent: true),
-                      style: TextStyle(
-                        color: Color(0xFFF2CF37),
-                        fontFamily: "arlrdbd",
-                        fontSize: 20,
+              padding: const EdgeInsets.all(12.0),
+              child: AdventureCard(
+                onTap: _Share,
+                gradientColors: const [
+                  Color(0xFFFFF9E3),
+                  Color(0xFFFFEAA7),
+                ],
+                child: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.share_rounded, color: Color(0xFFD4A017), size: 28),
+                      SizedBox(width: 12),
+                      Text(
+                        'Share',
+                        style: TextStyle(
+                          color: Color(0xFFD4A017),
+                          fontFamily: "arlrdbd",
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      textAlign: TextAlign.left,
-                    ),
+                    ],
                   ),
-                  alignment: Alignment.centerLeft,
                 ),
               ),
             ),
           ],
+        ),
+              ),
+              ),
+            ],
+          ),
         ),
       ),
     );

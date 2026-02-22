@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
 import 'package:kids/utils/ad_helper.dart';
-// import 'package:kids/utils/admob.dart';
-// import 'package:kids/utils/app_constrant.dart';
+import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/video.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_button.dart';
+import 'package:kids/widgets/adventure_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Pages/LookAndChooes.dart';
 import 'Pages/VideoLearning.dart';
 import 'Pages/listen_and_guess.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -53,22 +54,40 @@ class _HomeScreenState extends State<HomeScreen> {
       return await showDialog(
             context: context,
             builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
               title: const Text(
-                'Exit App',
-                style: TextStyle(color: Colors.black, fontSize: 30),
+                'See you soon! 👋',
+                style: TextStyle(
+                  fontFamily: "arlrdbd",
+                  color: Color(0xFF1A5F7A),
+                  fontSize: 24,
+                ),
               ),
               content: const Text(
-                'Do you want to exit an App?',
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                'Are you sure you want to leave?',
+                style: TextStyle(
+                  fontFamily: "arlrdbd",
+                  color: Colors.black87,
+                  fontSize: 18,
+                ),
               ),
               actions: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('No'),
+                  child: const Text('Stay'),
                 ),
-                ElevatedButton(
+                FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Yes'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: appBarStart,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text('Exit'),
                 ),
               ],
             ),
@@ -80,183 +99,185 @@ class _HomeScreenState extends State<HomeScreen> {
       WillPopScope(
         onWillPop: showExitPopup,
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            // highlightElevation: 20,
-            onPressed: () {
-              _openMap();
-            },
-            child: const Icon(
-              Icons.star,
-              color: Colors.black,
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [scaffoldBgStart, scaffoldBgEnd],
+              ),
             ),
-            backgroundColor: const Color.fromARGB(255, 146, 239, 166),
-          ),
-          appBar: AppBar(
-            backgroundColor: const Color.fromARGB(255, 146, 239, 166),
-            title: const Center(
-              child: Text(
-                "Kids Learning",
-                style: TextStyle(
-                    fontFamily: "arlrdbd",
-                    fontSize: 30,
-                    color: Color.fromARGB(255, 5, 174, 41)),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Gradient app bar
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [appBarStart, appBarEnd],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: cardShadowColor,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Text(
+                      "Kids Learning",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "arlrdbd",
+                        fontSize: 28,
+                        color: Color(0xFF1A5F7A),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const VideoApp(),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                              children: [
+                                _buildMenuCard(
+                                  onTap: () =>
+                                      Get.to(() => LetsStartLearning()),
+                                  gradient: const [
+                                    Color(0xFFD4F5DC),
+                                    Color(0xFFA8E6CF),
+                                  ],
+                                  image: "assets/images/number.png",
+                                  label: 'Start Learning',
+                                  textColor: const Color(0xFF2E7D32),
+                                ),
+                                _buildMenuCard(
+                                  onTap: () => Get.to(() => VideoLearning()),
+                                  gradient: const [
+                                    Color(0xFFFFE5D9),
+                                    Color(0xFFFFDAB9),
+                                  ],
+                                  image: "assets/images/video.png",
+                                  label: 'Video Learning',
+                                  textColor: const Color(0xFFE85D4C),
+                                ),
+                                _buildMenuCard(
+                                  onTap: () =>
+                                      Get.to(() => LookAndChooes(index)),
+                                  gradient: const [
+                                    Color(0xFFFFF9E3),
+                                    Color(0xFFFFEAA7),
+                                  ],
+                                  image: "assets/images/apple.png",
+                                  label: 'Look And Choose',
+                                  textColor: const Color(0xFFD4A017),
+                                ),
+                                _buildMenuCard(
+                                  onTap: () => Get.to(() => ListenGuess()),
+                                  gradient: const [
+                                    Color(0xFFE8E0F0),
+                                    Color(0xFFD4C5F9),
+                                  ],
+                                  image: "assets/images/lione.png",
+                                  label: 'Listen and Guess',
+                                  textColor: const Color(0xFF6B5B95),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          body: Center(
-            child: Column(
-              children: [
-                const VideoApp(),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 15,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              // Show ad before navigation (if enough time has passed)
-                              if (_adManager.isAdReady() &&
-                                  _adManager.canShowAd()) {
-                                _adManager.showCustomInterstitialAd(context);
-                              }
-                              Get.to(() => LetsStartLearning());
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 220, 255, 228),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/number.png",
-                                    height: 100,
-                                  ),
-                                  const Text(
-                                    'Start Learning',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "arlrdbd",
-                                        color: Color.fromARGB(255, 5, 174, 41)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // Show ad before navigation (if enough time has passed)
-                              if (_adManager.isAdReady() &&
-                                  _adManager.canShowAd()) {
-                                _adManager.showCustomInterstitialAd(context);
-                              }
-                              Get.to(() => VideoLearning());
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 237, 223),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/video.png",
-                                    height: 100,
-                                  ),
-                                  const Text(
-                                    'Video Learning',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "arlrdbd",
-                                        color: Color(0xFFEC9E4E)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // Show ad before navigation (if enough time has passed)
-                              if (_adManager.isAdReady() &&
-                                  _adManager.canShowAd()) {
-                                _adManager.showCustomInterstitialAd(context);
-                              }
-                              Get.to(() => LookAndChooes(index));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 250, 230),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/apple.png",
-                                    height: 100,
-                                  ),
-                                  const Text(
-                                    'Look And Choose',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "arlrdbd",
-                                        color:
-                                            Color.fromARGB(255, 255, 217, 46)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // Show ad before navigation (if enough time has passed)
-                              if (_adManager.isAdReady() &&
-                                  _adManager.canShowAd()) {
-                                _adManager.showCustomInterstitialAd(context);
-                              }
-                              Get.to(() => ListenGuess());
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 239, 236, 255),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/lione.png",
-                                    height: 100,
-                                  ),
-                                  const Text(
-                                    'Listen and Guess',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "arlrdbd",
-                                        color: Color(0xFF8770E4)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ),
-              ],
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: _openMap,
+            icon: const Icon(Icons.star_rounded, color: Colors.white),
+            label: const Text(
+              'Rate us',
+              style: TextStyle(
+                fontFamily: "arlrdbd",
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            backgroundColor: appBarStart,
+            elevation: 4,
           ),
         ),
       ),
     ]);
+  }
+
+  Widget _buildMenuCard({
+    required VoidCallback onTap,
+    required List<Color> gradient,
+    required String image,
+    required String label,
+    required Color textColor,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: gradient,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: cardShadowColor,
+                blurRadius: 12,
+                offset: Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(image, height: 88),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: "arlrdbd",
+                    fontSize: 16,
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   _openMap() async {

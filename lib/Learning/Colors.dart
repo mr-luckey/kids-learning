@@ -1,9 +1,11 @@
+import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kids/Alphabetssound/ColorSound.dart';
-import 'package:kids/utils/app_constrant.dart';
 import 'package:kids/utils/model.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/widgets/adventure_background.dart';
+import 'package:kids/widgets/adventure_card.dart';
 
 class Color extends StatefulWidget {
   // int index;
@@ -19,18 +21,31 @@ class _ColorState extends State<Color> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: LetsStartLearningTextColor),
-          backgroundColor: LetsStartLearningbgcolor,
-          elevation: 0,
-          title: Center(
-              child: Text(
-            'Color',
-            style: TextStyle(
-                color: LetsStartLearningTextColor, fontFamily: "arlrdbd"),
-          )),
-        ),
-        body: Padding(
+        body: AdventureBackground(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: const ui.Color(0xFF1A5F7A),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Expanded(
+                        child: AdventureTitle(
+                          text: 'Color',
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 48),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
           padding: const EdgeInsets.all(15),
           child: Container(
             child: GridView.builder(
@@ -41,40 +56,42 @@ class _ColorState extends State<Color> {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                    // splashColor: Colors.redAccent,
+                final gradients = [
+                  [ui.Color(0xFFB8E6F5), ui.Color(0xFFFFE5A8)],
+                  [ui.Color(0xFFFFB5D0), ui.Color(0xFFFFE5A8)],
+                  [ui.Color(0xFFA8E6A0), ui.Color(0xFFB8D4F0)],
+                ];
+                return AdventureCard(
                     onTap: () {
-                      print(colorlist);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ColorSound(index),
                           ));
                     },
-                    child: Card(
-                      color: LetsStartLearningbgcolor,
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      shadowColor: LetsStartLearningTextColor,
+                    gradientColors: gradients[index % gradients.length],
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image.asset(
                               colorlist[index].image!,
-                              height: 120,
+                              height: 100,
                             ),
-                            Text(
-                              colorlist[index].Text!,
-                              style: TextStyle(
-                                  color: LetsStartLearningTextColor,
-                                  fontFamily: "arlrdbd"),
-                            )
+                            const SizedBox(height: 8),
+                            AdventureText(
+                              text: colorlist[index].Text!,
+                              fontSize: 14,
+                            ),
                           ]),
                     ));
               },
+            ),
+          ),
+        ),
+                ),
+              ],
             ),
           ),
         ));
