@@ -13,11 +13,9 @@ import 'package:kids/Learning/Vegitable.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
-import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_engaging_card.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
-import 'package:kids/widgets/kids_ui_buttons.dart';
 
-/// One row of the main menu.
 class _Category {
   final String title;
   final String image;
@@ -32,8 +30,6 @@ class _Category {
   });
 }
 
-/// Main menu: a scrolling list of horizontal category pills, one per lesson
-/// set, each in its own accent colour.
 class LetsStartLearning extends StatelessWidget {
   LetsStartLearning({Key? key}) : super(key: key);
 
@@ -47,61 +43,61 @@ class LetsStartLearning extends StatelessWidget {
   final List<_Category> categories = <_Category>[
     _Category(
       title: 'Alphabet',
-      image: 'assets/images/Alphabet.png',
+      image: 'assets/ui/cat_Alphabet.png',
       color: KidsTheme.alphabet,
       open: (BuildContext context) => _push(context, Alphabet()),
     ),
     _Category(
       title: 'Number',
-      image: 'assets/images/Numbers.png',
+      image: 'assets/ui/cat_Numbers.png',
       color: KidsTheme.number,
       open: (BuildContext context) => _push(context, Numbers()),
     ),
     _Category(
       title: 'Color',
-      image: 'assets/images/Color.png',
+      image: 'assets/ui/cat_Color.png',
       color: KidsTheme.color,
       open: (BuildContext context) => Get.to(() => learning_colors.Color()),
     ),
     _Category(
       title: 'Shape',
-      image: 'assets/images/Shapes.png',
+      image: 'assets/ui/cat_Shapes.png',
       color: KidsTheme.shape,
       open: (BuildContext context) => _push(context, Shapes()),
     ),
     _Category(
       title: 'Animal',
-      image: 'assets/images/Animals.png',
+      image: 'assets/ui/cat_Animals.png',
       color: KidsTheme.animal,
       open: (BuildContext context) => _push(context, Animal()),
     ),
     _Category(
       title: 'Bird',
-      image: 'assets/images/Birds.png',
+      image: 'assets/ui/cat_Birds.png',
       color: KidsTheme.bird,
       open: (BuildContext context) => _push(context, Brids()),
     ),
     _Category(
       title: 'Flower',
-      image: 'assets/images/Flowers.png',
+      image: 'assets/ui/cat_Flowers.png',
       color: KidsTheme.flower,
       open: (BuildContext context) => _push(context, Flower()),
     ),
     _Category(
       title: 'Fruit',
-      image: 'assets/images/Fruit.png',
+      image: 'assets/ui/cat_Fruit.png',
       color: KidsTheme.fruits,
       open: (BuildContext context) => _push(context, Fruits()),
     ),
     _Category(
       title: 'Month',
-      image: 'assets/images/Month.png',
+      image: 'assets/ui/cat_Month.png',
       color: KidsTheme.navOrange,
       open: (BuildContext context) => _push(context, Month()),
     ),
     _Category(
       title: 'Vegetable',
-      image: 'assets/images/Vegitable.png',
+      image: 'assets/ui/cat_Vegitable.png',
       color: KidsTheme.tileStartLearning,
       open: (BuildContext context) => _push(context, Vegitable()),
     ),
@@ -115,21 +111,41 @@ class LetsStartLearning extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              _header(context),
+              KidsHubHeader(
+                title: 'Preschool Kids\nLearning',
+                onBack: () {
+                  KidsSound.instance.whoosh();
+                  Navigator.of(context).pop();
+                },
+                trailing: KidsBounce(
+                  offset: 7,
+                  child: Image.asset(
+                    'assets/ui/letter_A.png',
+                    width: 54,
+                    height: 54,
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+              ),
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 4, bottom: 22),
+                child: GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(14, 6, 14, 20),
                   itemCount: categories.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.82,
+                  ),
                   itemBuilder: (BuildContext context, int index) {
                     final _Category category = categories[index];
                     return KidsPopIn(
-                      delay: Duration(milliseconds: 60 * index),
-                      child: KidsCategoryPill(
+                      delay: Duration(milliseconds: 50 * index),
+                      child: KidsEngagingCard(
                         label: category.title,
-                        borderColor: category.color,
+                        color: category.color,
                         imageAsset: category.image,
-                        bounce: true,
-                        bounceDelay: Duration(milliseconds: 50 * index),
+                        bounceDelay: Duration(milliseconds: 80 * index),
                         onTap: () {
                           KidsSound.instance.whoosh();
                           category.open(context);
@@ -142,49 +158,6 @@ class LetsStartLearning extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          KidsCircleNav.back(
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: KidsBubbleTitle(
-                'Preschool Kids\nLearning',
-                fontSize: 30,
-                maxLines: 2,
-                rimColor: Colors.white,
-                fillColor: KidsTheme.bubbleFillBlue,
-              ),
-            ),
-          ),
-          KidsBounce(
-            offset: 8,
-            tilt: 0.05,
-            child: Image.asset(
-              'assets/images/Animals.png',
-              width: 58,
-              height: 58,
-              fit: BoxFit.contain,
-              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
-                return const Icon(
-                  Icons.pets_rounded,
-                  size: 50,
-                  color: Colors.white,
-                );
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

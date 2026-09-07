@@ -13,20 +13,14 @@ import 'package:kids/ListenGuessSongs/Vegitable.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
-import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_engaging_card.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
-import 'package:kids/widgets/kids_ui_buttons.dart';
 
-/// One row of the listen-and-guess menu.
 class _GuessEntry {
   final String title;
   final String image;
   final Color color;
-
-  /// Word spoken by TTS when the row is tapped, previewing the category.
   final String speak;
-
-  /// Built lazily so opening this screen does not construct all ten songs.
   final Widget Function() build;
 
   const _GuessEntry({
@@ -51,84 +45,88 @@ class _ListenGuessState extends State<ListenGuess> {
   final List<_GuessEntry> categories = <_GuessEntry>[
     _GuessEntry(
       title: 'Alphabet',
-      image: 'assets/images/Alphabet.png',
+      image: 'assets/ui/cat_Alphabet.png',
       color: KidsTheme.alphabet,
       speak: 'Apple',
       build: () => AlphabetSong(),
     ),
     _GuessEntry(
       title: 'Number',
-      image: 'assets/images/Numbers.png',
+      image: 'assets/ui/cat_Numbers.png',
       color: KidsTheme.number,
       speak: 'Zero',
       build: () => NumberSong(),
     ),
     _GuessEntry(
       title: 'Color',
-      image: 'assets/images/Color.png',
+      image: 'assets/ui/cat_Color.png',
       color: KidsTheme.color,
       speak: 'AQUA',
       build: () => ColorSong(),
     ),
     _GuessEntry(
       title: 'Shape',
-      image: 'assets/images/Shapes.png',
+      image: 'assets/ui/cat_Shapes.png',
       color: KidsTheme.shape,
       speak: 'ARROW',
       build: () => ShapesSong(),
     ),
     _GuessEntry(
       title: 'Animal',
-      image: 'assets/images/Animals.png',
+      image: 'assets/ui/cat_Animals.png',
       color: KidsTheme.animal,
-      speak: 'BEER',
+      speak: 'Lion',
       build: () => AnimalsSong(),
     ),
     _GuessEntry(
       title: 'Bird',
-      image: 'assets/images/Birds.png',
+      image: 'assets/ui/cat_Birds.png',
       color: KidsTheme.bird,
-      speak: 'ARARAT',
+      speak: 'Parrot',
       build: () => BirdsSong(),
     ),
     _GuessEntry(
       title: 'Flower',
-      image: 'assets/images/Flowers.png',
+      image: 'assets/ui/cat_Flowers.png',
       color: KidsTheme.flower,
-      speak: 'BLACK ROSE',
+      speak: 'Rose',
       build: () => FlowerSong(),
     ),
     _GuessEntry(
       title: 'Fruit',
-      image: 'assets/images/Fruit.png',
+      image: 'assets/ui/cat_Fruit.png',
       color: KidsTheme.fruits,
-      speak: 'APPLE',
+      speak: 'Apple',
       build: () => FruitSong(),
     ),
     _GuessEntry(
       title: 'Month',
-      image: 'assets/images/Month.png',
+      image: 'assets/ui/cat_Month.png',
       color: KidsTheme.navOrange,
-      speak: 'JANUARY',
+      speak: 'January',
       build: () => MonthSong(),
     ),
     _GuessEntry(
       title: 'Vegetable',
-      image: 'assets/images/Vegitable.png',
+      image: 'assets/ui/cat_Vegitable.png',
       color: KidsTheme.tileStartLearning,
-      speak: 'BELL PEPPER',
+      speak: 'Carrot',
       build: () => VegitableSong(),
     ),
   ];
 
-  void _open(_GuessEntry entry) {
+  Future<void> _open(_GuessEntry entry) async {
     KidsSound.instance.whoosh();
-    flutterTts.speak(entry.speak);
+    try {
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.setVolume(1.0);
+      await flutterTts.setSpeechRate(0.45);
+      await flutterTts.speak(entry.speak);
+    } catch (_) {}
+    if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => entry.build(),
-      ),
+      MaterialPageRoute<void>(builder: (BuildContext context) => entry.build()),
     );
   }
 
@@ -140,21 +138,32 @@ class _ListenGuessState extends State<ListenGuess> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              _header(context),
+              KidsHubHeader(
+                title: 'Listen and Guess',
+                onBack: () {
+                  KidsSound.instance.whoosh();
+                  Navigator.of(context).pop();
+                },
+              ),
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 4, bottom: 22),
+                child: GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(14, 6, 14, 20),
                   itemCount: categories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final _GuessEntry entry = categories[index];
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.82,
+                  ),
+                  itemBuilder: (BuildContext context, int i) {
+                    final _GuessEntry entry = categories[i];
                     return KidsPopIn(
-                      delay: Duration(milliseconds: 60 * index),
-                      child: KidsCategoryPill(
+                      delay: Duration(milliseconds: 50 * i),
+                      child: KidsEngagingCard(
                         label: entry.title,
-                        borderColor: entry.color,
+                        color: entry.color,
                         imageAsset: entry.image,
-                        bounce: true,
-                        bounceDelay: Duration(milliseconds: 50 * index),
+                        bounceDelay: Duration(milliseconds: 80 * i),
                         onTap: () => _open(entry),
                       ),
                     );
@@ -164,34 +173,6 @@ class _ListenGuessState extends State<ListenGuess> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          KidsCircleNav.back(onTap: () => Navigator.of(context).pop()),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: KidsBubbleTitle(
-                'Listen and Guess',
-                fontSize: 30,
-                maxLines: 2,
-                rimColor: Colors.white,
-                fillColor: KidsTheme.tileListenGuess,
-              ),
-            ),
-          ),
-          KidsSpeakerButton(
-            size: 58,
-            onTap: () => flutterTts.speak('Listen and Guess'),
-          ),
-        ],
       ),
     );
   }

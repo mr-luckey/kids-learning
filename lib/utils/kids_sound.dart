@@ -35,7 +35,8 @@ class KidsSound {
   bool _broken = false;
 
   bool _enabled = true;
-  double _volume = 1.0;
+  /// Keep effect volume low so TTS / letter speech stays clearly louder.
+  double _volume = 0.28;
 
   /// Whether sound effects are currently audible.
   bool get enabled => _enabled;
@@ -125,9 +126,28 @@ class KidsSound {
     _fire(_play(_sparkle));
   }
 
-  /// Cue played when the speaker button is pressed, just before TTS speaks.
+  /// Tiny cue before TTS — kept very quiet so letter speech dominates.
   void speak() {
-    _fire(_play(_speak));
+    _fire(_playAt(_speak, 0.12));
+  }
+
+  Future<void> _playAt(String asset, double volume) async {
+    if (!_enabled || _broken) return;
+    _ensurePool();
+    if (_pool.isEmpty) return;
+    final AudioPlayer player = _pool[_cursor];
+    _cursor = (_cursor + 1) % _pool.length;
+    try {
+      await player.stop();
+    } catch (_) {}
+    try {
+      await player.play(
+        AssetSource(asset),
+        volume: (volume * _volume / 0.28).clamp(0.0, 1.0),
+      );
+    } catch (e) {
+      _debug('play failed for $asset: $e');
+    }
   }
 
   /// Plays an arbitrary asset under `assets/` (e.g. `sounds/letters/a.wav`).

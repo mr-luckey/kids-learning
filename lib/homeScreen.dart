@@ -7,12 +7,11 @@ import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
 import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_engaging_card.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
 import 'package:kids/widgets/kids_ui_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Activity selection screen: a 2x2 grid of big candy tiles on the animated
-/// sky + meadow background.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -27,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Warms the audio players so the very first tap clicks instantly.
     KidsSound.instance.preload();
   }
 
@@ -35,9 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final Uri uri = Uri.parse(_storeUrl);
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {
-      // A missing browser / store app must never crash the home screen.
-    }
+    } catch (_) {}
   }
 
   void _go(Widget Function() page) {
@@ -54,72 +50,67 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           insetPadding: const EdgeInsets.symmetric(horizontal: 28),
-          child: KidsPopIn(child: _exitCard(context)),
+          child: KidsPopIn(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+              decoration: BoxDecoration(
+                gradient: KidsTheme.softFill(KidsTheme.backBlue, strength: 0.3),
+                borderRadius: BorderRadius.circular(KidsTheme.radiusTile),
+                border: Border.all(color: KidsTheme.backBlue, width: 5),
+                boxShadow: KidsTheme.pillowShadow(KidsTheme.backBlue, depth: 6),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  KidsBounce(
+                    child: Image.asset(
+                      'assets/ui/rate_star_3d.png',
+                      height: 72,
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.emoji_emotions_rounded,
+                        size: 64,
+                        color: KidsTheme.tileLookChoose,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const KidsBubbleTitle('See you soon!', fontSize: 32),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Do you want to stop playing?',
+                    textAlign: TextAlign.center,
+                    style: KidsTheme.label(fontSize: 19),
+                  ),
+                  const SizedBox(height: 20),
+                  KidsPrimaryCta(
+                    label: 'Keep Playing',
+                    color: KidsTheme.tileStartLearning,
+                    icon: Icons.play_arrow_rounded,
+                    height: 58,
+                    fontSize: 20,
+                    onTap: () => Navigator.of(context).pop(false),
+                  ),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text(
+                      'Exit',
+                      style: TextStyle(
+                        fontFamily: KidsTheme.fontFamily,
+                        fontSize: 18,
+                        color: KidsTheme.wrongRed,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
     return leave ?? false;
-  }
-
-  Widget _exitCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
-      decoration: BoxDecoration(
-        gradient: KidsTheme.softFill(KidsTheme.backBlue, strength: 0.3),
-        borderRadius: BorderRadius.circular(KidsTheme.radiusTile),
-        border: Border.all(color: KidsTheme.backBlue, width: 5),
-        boxShadow: KidsTheme.pillowShadow(KidsTheme.backBlue, depth: 6),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          KidsBounce(
-            offset: 5,
-            child: Image.asset(
-              'assets/images/logo.png',
-              height: 78,
-              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
-                return const Icon(
-                  Icons.emoji_emotions_rounded,
-                  size: 70,
-                  color: KidsTheme.tileLookChoose,
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 12),
-          const KidsBubbleTitle('See you soon!', fontSize: 32),
-          const SizedBox(height: 10),
-          Text(
-            'Do you want to stop playing?',
-            textAlign: TextAlign.center,
-            style: KidsTheme.label(fontSize: 19),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: KidsPrimaryCta(
-                  label: 'Keep Playing',
-                  color: KidsTheme.tileStartLearning,
-                  icon: Icons.play_arrow_rounded,
-                  height: 60,
-                  fontSize: 20,
-                  onTap: () => Navigator.of(context).pop(false),
-                ),
-              ),
-              const SizedBox(width: 12),
-              KidsCircleNav(
-                direction: KidsNavDirection.close,
-                color: KidsTheme.wrongRed,
-                size: 60,
-                onTap: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -130,11 +121,39 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: KidsTheme.skyTop,
         body: KidsSkyBackground(
           child: SafeArea(
-            child: Column(
+            child: Stack(
               children: <Widget>[
-                _header(),
-                Expanded(child: _tileGrid()),
-                _footer(),
+                Column(
+                  children: <Widget>[
+                    _header(),
+                    Expanded(child: _tileGrid()),
+                    const SizedBox(height: 88),
+                  ],
+                ),
+                // Floating cartoon Rate Us — bottom right
+                Positioned(
+                  right: 14,
+                  bottom: 14,
+                  child: KidsFloatingRateUs(onTap: _openStore),
+                ),
+                // Friendly sun / character — bottom left (not app logo on a button)
+                Positioned(
+                  left: 10,
+                  bottom: 18,
+                  child: KidsBounce(
+                    offset: 8,
+                    tilt: 0.05,
+                    child: Image.asset(
+                      'assets/images/sun.png',
+                      height: 70,
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.wb_sunny_rounded,
+                        size: 64,
+                        color: KidsTheme.speakerYellow,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -157,22 +176,21 @@ class _HomeScreenState extends State<HomeScreen> {
               fillColor: KidsTheme.bubbleFillBlue,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           KidsBounce(
             offset: 7,
             tilt: 0.04,
             child: Image.asset(
-              'assets/images/sun.png',
-              height: 68,
-              width: 68,
+              'assets/ui/letter_A.png',
+              height: 64,
+              width: 64,
               fit: BoxFit.contain,
-              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
-                return const Icon(
-                  Icons.wb_sunny_rounded,
-                  size: 60,
-                  color: KidsTheme.speakerYellow,
-                );
-              },
+              filterQuality: FilterQuality.high,
+              errorBuilder: (_, __, ___) => const Icon(
+                Icons.wb_sunny_rounded,
+                size: 56,
+                color: KidsTheme.speakerYellow,
+              ),
             ),
           ),
         ],
@@ -181,104 +199,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _tileGrid() {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        const double gap = 16;
-        const EdgeInsets pad = EdgeInsets.fromLTRB(18, 8, 18, 8);
-
-        final double cellWidth =
-            (constraints.maxWidth - pad.horizontal - gap) / 2;
-        final double cellHeight =
-            (constraints.maxHeight - pad.vertical - gap) / 2;
-        // Fill the available height when we can, but never squash the tiles
-        // into letterboxes on very short screens — the grid scrolls instead.
-        final double aspect = (cellHeight > 0 && cellWidth > 0)
-            ? (cellWidth / cellHeight).clamp(0.74, 1.15)
-            : 1.0;
-
-        return GridView.count(
-          padding: pad,
-          crossAxisCount: 2,
-          mainAxisSpacing: gap,
-          crossAxisSpacing: gap,
-          childAspectRatio: aspect,
-          children: <Widget>[
-            KidsPopIn(
-              child: KidsHomeTile(
-                label: 'Start Learning',
-                color: KidsTheme.tileStartLearning,
-                imageAsset: 'assets/images/number.png',
-                icon: Icons.school_rounded,
-                bounceDelay: Duration.zero,
-                onTap: () => _go(() => LetsStartLearning()),
-              ),
-            ),
-            KidsPopIn(
-              delay: const Duration(milliseconds: 90),
-              child: KidsHomeTile(
-                label: 'Fun Quiz',
-                color: KidsTheme.tileFunQuiz,
-                imageAsset: 'assets/images/logo.png',
-                icon: Icons.extension_rounded,
-                bounceDelay: const Duration(milliseconds: 550),
-                onTap: () => _go(() => LookAndChooes(0)),
-              ),
-            ),
-            KidsPopIn(
-              delay: const Duration(milliseconds: 180),
-              child: KidsHomeTile(
-                label: 'Look And Choose',
-                color: KidsTheme.tileLookChoose,
-                imageAsset: 'assets/images/apple.png',
-                icon: Icons.touch_app_rounded,
-                bounceDelay: const Duration(milliseconds: 1100),
-                onTap: () => _go(() => LookAndChooes(0)),
-              ),
-            ),
-            KidsPopIn(
-              delay: const Duration(milliseconds: 270),
-              child: KidsHomeTile(
-                label: 'Listen and Guess',
-                color: KidsTheme.tileListenGuess,
-                imageAsset: 'assets/images/lione.png',
-                icon: Icons.hearing_rounded,
-                bounceDelay: const Duration(milliseconds: 1650),
-                onTap: () => _go(() => ListenGuess()),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _footer() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: GridView.count(
+        physics: const BouncingScrollPhysics(),
+        crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 14,
+        childAspectRatio: 0.78,
         children: <Widget>[
-          KidsBounce(
-            offset: 9,
-            tilt: 0.05,
-            child: Image.asset(
-              'assets/images/logo.png',
-              height: 76,
-              fit: BoxFit.contain,
-              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
-                return const Icon(
-                  Icons.emoji_emotions_rounded,
-                  size: 66,
-                  color: Colors.white,
-                );
-              },
+          KidsPopIn(
+            child: KidsEngagingCard(
+              label: 'Start Learning',
+              color: KidsTheme.tileStartLearning,
+              imageAsset: 'assets/ui/home_start_3d.png',
+              icon: Icons.school_rounded,
+              bounceDelay: Duration.zero,
+              onTap: () => _go(() => LetsStartLearning()),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: KidsRateButton(
-              label: 'Rate us',
-              onTap: _openStore,
+          KidsPopIn(
+            delay: const Duration(milliseconds: 90),
+            child: KidsEngagingCard(
+              label: 'Fun Quiz',
+              color: KidsTheme.tileFunQuiz,
+              imageAsset: 'assets/ui/home_fun_quiz_3d.png',
+              icon: Icons.extension_rounded,
+              bounceDelay: const Duration(milliseconds: 500),
+              onTap: () => _go(() => LookAndChooes(0)),
+            ),
+          ),
+          KidsPopIn(
+            delay: const Duration(milliseconds: 180),
+            child: KidsEngagingCard(
+              label: 'Look And Choose',
+              color: KidsTheme.tileLookChoose,
+              imageAsset: 'assets/ui/home_look_3d.png',
+              icon: Icons.touch_app_rounded,
+              bounceDelay: const Duration(milliseconds: 1000),
+              onTap: () => _go(() => LookAndChooes(0)),
+            ),
+          ),
+          KidsPopIn(
+            delay: const Duration(milliseconds: 270),
+            child: KidsEngagingCard(
+              label: 'Listen and Guess',
+              color: KidsTheme.tileListenGuess,
+              imageAsset: 'assets/ui/home_listen_3d.png',
+              icon: Icons.hearing_rounded,
+              bounceDelay: const Duration(milliseconds: 1500),
+              onTap: () => _go(() => ListenGuess()),
             ),
           ),
         ],

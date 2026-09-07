@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/widgets/kids_3d_letter.dart';
 import 'package:kids/widgets/kids_animations.dart';
 import 'package:kids/widgets/kids_bubble_title.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
@@ -13,7 +14,6 @@ class KidsItemDetail extends StatefulWidget {
   final String title;
   final List<Numbermodel> items;
   final int initialIndex;
-  /// Optional second image (used by Numbers).
   final String? Function(Numbermodel item)? secondaryImage;
 
   const KidsItemDetail({
@@ -47,8 +47,13 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
   Future<void> _configureTts() async {
     try {
       await _tts.setLanguage('en-US');
-      await _tts.setPitch(1.2);
+      await _tts.setSpeechRate(0.42);
+      await _tts.setPitch(1.15);
+      // Max volume — effect SFX are intentionally quieter so speech wins.
       await _tts.setVolume(1.0);
+      try {
+        await _tts.awaitSpeakCompletion(true);
+      } catch (_) {}
       _tts.setStartHandler(() {
         if (mounted) setState(() => _speaking = true);
       });
@@ -67,9 +72,13 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
   Future<void> _speak() async {
     final String text = widget.items[_index].Text ?? '';
     if (text.isEmpty) return;
+    // Quiet cue only — never let SFX overpower the letter voice.
     KidsSound.instance.speak();
     try {
       await _tts.stop();
+      // Tiny beat so the soft cue finishes before loud speech.
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      await _tts.setVolume(1.0);
       await _tts.speak(text);
     } catch (_) {
       if (mounted) setState(() => _speaking = false);
@@ -98,16 +107,17 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
         widget.secondaryImage != null ? widget.secondaryImage!(item) : null;
     final Color accent =
         KidsTheme.categoryPalette[_index % KidsTheme.categoryPalette.length];
+    final bool isLetter = Kids3DLetter.isLetter(badge);
 
     return Scaffold(
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(
-            children: [
+            children: <Widget>[
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     KidsCircleNav.back(
                       onTap: () {
                         KidsSound.instance.whoosh();
@@ -125,33 +135,50 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints c) {
                     final double side =
-                        (c.maxWidth * 0.82).clamp(180.0, c.maxHeight * 0.72);
+                        (c.maxWidth * 0.86).clamp(200.0, c.maxHeight * 0.78);
                     return Center(
                       child: KidsBounce(
+                        offset: 8,
+                        scale: 0.03,
                         child: SizedBox(
                           width: side,
                           height: side,
                           child: Stack(
                             clipBehavior: Clip.none,
-                            children: [
+                            children: <Widget>[
                               Container(
                                 decoration: BoxDecoration(
-                                  gradient: KidsTheme.softFill(accent),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: <Color>[
+                                      Colors.white,
+                                      Color.lerp(Colors.white, accent, 0.18)!,
+                                      Color.lerp(Colors.white, accent, 0.32)!,
+                                    ],
+                                  ),
                                   borderRadius: BorderRadius.circular(36),
                                   border:
                                       Border.all(color: Colors.white, width: 5),
                                   boxShadow:
-                                      KidsTheme.pillowShadow(accent, depth: 6),
+                                      KidsTheme.pillowShadow(accent, depth: 7),
                                 ),
                                 padding: const EdgeInsets.all(18),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: <Widget>[
                                     Expanded(
-                                      child: Image.asset(
-                                        item.image!,
-                                        fit: BoxFit.contain,
-                                      ),
+                                      child: isLetter
+                                          ? Kids3DLetter(
+                                              letter: badge,
+                                              size: side * 0.72,
+                                            )
+                                          : Image.asset(
+                                              item.image!,
+                                              fit: BoxFit.contain,
+                                              filterQuality:
+                                                  FilterQuality.high,
+                                            ),
                                     ),
                                     if (secondary != null &&
                                         secondary.isNotEmpty)
@@ -159,7 +186,7 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                                         padding: const EdgeInsets.only(top: 8),
                                         child: Image.asset(
                                           secondary,
-                                          height: side * 0.28,
+                                          height: side * 0.26,
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -168,17 +195,17 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                               ),
                               if (badge.isNotEmpty)
                                 Positioned(
-                                  top: -6,
-                                  right: -6,
+                                  top: -8,
+                                  right: -8,
                                   child: KidsPulse(
                                     child: Container(
-                                      width: 52,
-                                      height: 52,
+                                      width: 56,
+                                      height: 56,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        gradient:
-                                            KidsTheme.candyFill(KidsTheme.alphabet),
+                                        gradient: KidsTheme.candyFill(
+                                            KidsTheme.alphabet),
                                         border: Border.all(
                                             color: Colors.white, width: 3),
                                         boxShadow: KidsTheme.pillowShadow(
@@ -199,6 +226,32 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                                     ),
                                   ),
                                 ),
+                              // Wooden stump hint under letter (mockup vibe)
+                              if (isLetter)
+                                Positioned(
+                                  bottom: 8,
+                                  left: side * 0.22,
+                                  right: side * 0.22,
+                                  child: Container(
+                                    height: 18,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      gradient: const LinearGradient(
+                                        colors: <Color>[
+                                          Color(0xFFB57A45),
+                                          Color(0xFF8B5A2B),
+                                        ],
+                                      ),
+                                      boxShadow: const <BoxShadow>[
+                                        BoxShadow(
+                                          color: Color(0x33000000),
+                                          blurRadius: 6,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -211,14 +264,15 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                 padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     KidsCircleNav.previous(
                       enabled: _index > 0,
                       onTap: () => _go(-1),
                     ),
                     KidsSpeakerButton(
-                      size: 84,
+                      size: 88,
                       isPlaying: _speaking,
+                      pulse: true,
                       onTap: _speak,
                     ),
                     KidsCircleNav.next(

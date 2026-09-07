@@ -11,7 +11,6 @@ import 'package:kids/ListenGuessSongs/Number.dart';
 import 'package:kids/ListenGuessSongs/Shapes.dart';
 import 'package:kids/ListenGuessSongs/Vegitable.dart';
 import 'package:kids/Pages/LookAndChooes.dart';
-import 'package:kids/Pages/VideoLearning.dart';
 import 'package:kids/Pages/listen_and_guess.dart';
 import 'package:kids/Quiz/ABCQuize.dart';
 import 'package:kids/Quiz/AnimalQuize.dart';
@@ -26,6 +25,7 @@ import 'package:kids/Quiz/VegitableQuiz.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
 import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_engaging_card.dart';
 import 'package:kids/widgets/kids_quiz_screen.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
 import 'package:kids/widgets/kids_ui_buttons.dart';
@@ -248,24 +248,23 @@ void main() {
     });
   });
 
-  testWidgets('hub screens render titled pill lists', (WidgetTester t) async {
+  testWidgets('hub screens render engaging card grids', (WidgetTester t) async {
     final Map<String, Widget> hubs = <String, Widget>{
       'Look And Choose': LookAndChooes(0),
       'Listen and Guess': const ListenGuess(),
-      'Video Learning': const VideoLearning(),
     };
 
     for (final MapEntry<String, Widget> hub in hubs.entries) {
       await t.pumpWidget(MaterialApp(home: hub.value));
       await t.pump(const Duration(milliseconds: 900));
 
-      expect(find.byType(KidsCategoryPill), findsWidgets, reason: hub.key);
-      expect(find.text(hub.key), findsWidgets, reason: hub.key);
+      expect(find.byType(KidsEngagingCard), findsWidgets, reason: hub.key);
+      expect(find.textContaining(hub.key.split(' ').first), findsWidgets,
+          reason: hub.key);
 
-      // The list is lazy, so scroll down to build the later entries.
-      await t.drag(find.byType(ListView), const Offset(0, -700));
+      await t.drag(find.byType(GridView), const Offset(0, -700));
       await t.pump(const Duration(milliseconds: 600));
-      expect(find.byType(KidsCategoryPill), findsWidgets, reason: hub.key);
+      expect(find.byType(KidsEngagingCard), findsWidgets, reason: hub.key);
 
       await t.pumpWidget(const MaterialApp(home: SizedBox()));
       await t.pump(const Duration(seconds: 1));

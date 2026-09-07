@@ -6,6 +6,7 @@ import 'package:kids/Quiz/ABCQuize.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/widgets/kids_3d_letter.dart';
 import 'package:kids/widgets/kids_animations.dart';
 import 'package:kids/widgets/kids_bubble_title.dart';
 import 'package:kids/widgets/kids_sky_background.dart';
@@ -367,10 +368,15 @@ class _KidsQuizScreenState extends State<KidsQuizScreen> {
         ),
         child: widget.listenMode
             ? _speakerFace()
-            : Image.asset(
+            : Kids3DLetter.isLetter(item.Text)
+                ? Kids3DLetter(
+                    letter: item.Text!,
+                    size: 150,
+                  )
+                : Image.asset(
                 item.image ?? '',
                 fit: BoxFit.contain,
-                filterQuality: FilterQuality.medium,
+                filterQuality: FilterQuality.high,
                 errorBuilder:
                     (BuildContext context, Object error, StackTrace? stack) {
                   return Center(
