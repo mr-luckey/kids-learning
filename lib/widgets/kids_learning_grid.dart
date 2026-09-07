@@ -64,6 +64,7 @@ class KidsLearningGrid extends StatelessWidget {
                       label: label.isEmpty ? title : label,
                       color: border,
                       imageAsset: item.image,
+                      imageAsset2: item.image2,
                       letter: Kids3DLetter.isLetter(label) ? label : null,
                       bounceDelay:
                           Duration(milliseconds: (index % 6) * 160),

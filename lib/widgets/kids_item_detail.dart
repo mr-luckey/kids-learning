@@ -173,23 +173,12 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
                                               letter: badge,
                                               size: side * 0.72,
                                             )
-                                          : Image.asset(
-                                              item.image!,
-                                              fit: BoxFit.contain,
-                                              filterQuality:
-                                                  FilterQuality.high,
+                                          : _NumberDigitsArt(
+                                              primary: item.image,
+                                              secondary: secondary,
+                                              size: side * 0.72,
                                             ),
                                     ),
-                                    if (secondary != null &&
-                                        secondary.isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: Image.asset(
-                                          secondary,
-                                          height: side * 0.26,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ),
@@ -286,6 +275,72 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Renders a number as one visual: single digit for 0–9, side-by-side for 10–99.
+class _NumberDigitsArt extends StatelessWidget {
+  final String? primary;
+  final String? secondary;
+  final double size;
+
+  const _NumberDigitsArt({
+    Key? key,
+    required this.primary,
+    required this.secondary,
+    required this.size,
+  }) : super(key: key);
+
+  static const String _zeroAsset = 'assets/images/80.png';
+
+  @override
+  Widget build(BuildContext context) {
+    final String? tens = primary;
+    final String? ones = secondary;
+
+    if (tens == null || tens.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // 0–9 are stored as tens=0 + ones=digit — show only the ones digit.
+    final bool singleDigit =
+        tens == _zeroAsset && ones != null && ones.isNotEmpty;
+
+    if (singleDigit || ones == null || ones.isEmpty) {
+      return Image.asset(
+        singleDigit ? ones : tens,
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+      );
+    }
+
+    // 10–99: both digits together on one row (e.g. 11).
+    final double digitSize = size * 0.55;
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Image.asset(
+            tens,
+            width: digitSize,
+            height: digitSize,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+          ),
+          Image.asset(
+            ones,
+            width: digitSize,
+            height: digitSize,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+          ),
+        ],
       ),
     );
   }

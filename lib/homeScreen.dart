@@ -120,36 +120,40 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: KidsTheme.skyTop,
         body: KidsSkyBackground(
+          horizon: 0.78,
+          cloudCount: 6,
           child: SafeArea(
             child: Stack(
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    _header(),
-                    Expanded(child: _tileGrid()),
-                    const SizedBox(height: 88),
+                    _hero(),
+                    Expanded(child: _playboard()),
+                    const SizedBox(height: 96),
                   ],
                 ),
-                // Floating cartoon Rate Us — bottom right
                 Positioned(
-                  right: 14,
-                  bottom: 14,
+                  right: 12,
+                  bottom: 12,
                   child: KidsFloatingRateUs(onTap: _openStore),
                 ),
-                // Friendly sun / character — bottom left (not app logo on a button)
                 Positioned(
-                  left: 10,
-                  bottom: 18,
+                  left: 8,
+                  bottom: 14,
                   child: KidsBounce(
-                    offset: 8,
-                    tilt: 0.05,
+                    offset: 9,
+                    tilt: 0.06,
                     child: Image.asset(
-                      'assets/images/sun.png',
-                      height: 70,
-                      errorBuilder: (_, __, ___) => const Icon(
-                        Icons.wb_sunny_rounded,
-                        size: 64,
-                        color: KidsTheme.speakerYellow,
+                      'assets/ui/sun_3d.png',
+                      height: 78,
+                      errorBuilder: (_, __, ___) => Image.asset(
+                        'assets/images/sun.png',
+                        height: 70,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.wb_sunny_rounded,
+                          size: 64,
+                          color: KidsTheme.speakerYellow,
+                        ),
                       ),
                     ),
                   ),
@@ -162,51 +166,180 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _header() {
+  /// Brand-forward hero: title + mascot composition (not a dashboard strip).
+  Widget _hero() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 10, 18, 4),
-      child: Row(
-        children: <Widget>[
-          const Expanded(
-            child: KidsBubbleTitle(
-              'Kids Learning',
-              fontSize: 40,
-              maxLines: 2,
-              rimColor: Colors.white,
-              fillColor: KidsTheme.bubbleFillBlue,
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: KidsPopIn(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                Colors.white.withOpacity(0.92),
+                const Color(0xFFD9F0FF).withOpacity(0.88),
+                const Color(0xFFFFF0C2).withOpacity(0.75),
+              ],
             ),
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: Colors.white, width: 4),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: KidsTheme.backBlue.withOpacity(0.28),
+                blurRadius: 0,
+                offset: const Offset(0, 6),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.12),
+                blurRadius: 18,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          KidsBounce(
-            offset: 7,
-            tilt: 0.04,
-            child: Image.asset(
-              'assets/ui/letter_A.png',
-              height: 64,
-              width: 64,
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.high,
-              errorBuilder: (_, __, ___) => const Icon(
-                Icons.wb_sunny_rounded,
-                size: 56,
-                color: KidsTheme.speakerYellow,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const KidsBubbleTitle(
+                      'Kids Learning',
+                      fontSize: 34,
+                      maxLines: 2,
+                      textAlign: TextAlign.left,
+                      rimColor: Colors.white,
+                      fillColor: KidsTheme.bubbleFillBlue,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: KidsTheme.tileStartLearning.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: KidsTheme.tileStartLearning.withOpacity(0.55),
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        'Play • Learn • Smile',
+                        style: KidsTheme.label(
+                          fontSize: 15,
+                          color: KidsTheme.darken(KidsTheme.tileStartLearning, 0.28),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 6),
+              KidsBounce(
+                offset: 8,
+                tilt: 0.05,
+                child: Image.asset(
+                  'assets/ui/letter_A.png',
+                  height: 96,
+                  width: 96,
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (_, __, ___) => const Icon(
+                    Icons.wb_sunny_rounded,
+                    size: 72,
+                    color: KidsTheme.speakerYellow,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Soft frosted playboard holding the four activity tiles.
+  Widget _playboard() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              Colors.white.withOpacity(0.55),
+              Colors.white.withOpacity(0.28),
+              Colors.white.withOpacity(0.12),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(34),
+          border: Border.all(color: Colors.white.withOpacity(0.85), width: 3),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Row(
+                children: <Widget>[
+                  KidsBounce(
+                    offset: 4,
+                    child: Image.asset(
+                      'assets/ui/letter_A.png',
+                      height: 36,
+                      width: 36,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Pick a fun adventure!',
+                      style: KidsTheme.label(
+                        fontSize: 18,
+                        color: KidsTheme.inkDark.withOpacity(0.9),
+                      ),
+                    ),
+                  ),
+                  KidsBounce(
+                    delay: const Duration(milliseconds: 400),
+                    offset: 4,
+                    child: Image.asset(
+                      'assets/ui/letter_Z.png',
+                      height: 36,
+                      width: 36,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Expanded(child: _tileGrid()),
+          ],
+        ),
       ),
     );
   }
 
   Widget _tileGrid() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
       child: GridView.count(
         physics: const BouncingScrollPhysics(),
         crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 14,
-        childAspectRatio: 0.78,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.82,
         children: <Widget>[
           KidsPopIn(
             child: KidsEngagingCard(

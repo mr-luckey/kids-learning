@@ -12,6 +12,8 @@ class KidsEngagingCard extends StatelessWidget {
   final String label;
   final Color color;
   final String? imageAsset;
+  /// Optional ones-digit (or second art) — used so numbers like 11 render as one unit.
+  final String? imageAsset2;
   final String? letter;
   final IconData? icon;
   final VoidCallback? onTap;
@@ -23,6 +25,7 @@ class KidsEngagingCard extends StatelessWidget {
     required this.label,
     required this.color,
     this.imageAsset,
+    this.imageAsset2,
     this.letter,
     this.icon,
     this.onTap,
@@ -48,22 +51,27 @@ class KidsEngagingCard extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: <Color>[
                 Colors.white,
-                Color.lerp(Colors.white, color, 0.22)!,
-                Color.lerp(Colors.white, color, 0.38)!,
+                Color.lerp(Colors.white, color, 0.18)!,
+                Color.lerp(Colors.white, color, 0.42)!,
               ],
             ),
             borderRadius: radius,
-            border: Border.all(color: color, width: 5),
+            border: Border.all(color: color, width: 5.5),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: color.withOpacity(0.45),
+                color: KidsTheme.darken(color, 0.18).withOpacity(0.9),
                 blurRadius: 0,
-                spreadRadius: 3,
+                offset: const Offset(0, 7),
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.14),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
+                color: color.withOpacity(0.35),
+                blurRadius: 18,
+                offset: const Offset(0, 10),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.10),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -75,7 +83,7 @@ class KidsEngagingCard extends StatelessWidget {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: 54,
+                  height: 62,
                   child: IgnorePointer(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -83,7 +91,7 @@ class KidsEngagingCard extends StatelessWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: <Color>[
-                            Colors.white.withOpacity(0.75),
+                            Colors.white.withOpacity(0.85),
                             Colors.white.withOpacity(0.0),
                           ],
                         ),
@@ -92,17 +100,35 @@ class KidsEngagingCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 10,
+                  bottom: -30,
+                  right: -24,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 110,
+                      height: 110,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color.withOpacity(0.14),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 12,
                   right: 12,
                   child: Row(
                     children: List<Widget>.generate(3, (int i) {
                       return Container(
-                        width: 7,
-                        height: 7,
-                        margin: const EdgeInsets.only(left: 3),
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(left: 4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: color.withOpacity(0.35 + i * 0.15),
+                          color: color.withOpacity(0.4 + i * 0.18),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.7),
+                            width: 1.2,
+                          ),
                         ),
                       );
                     }),
@@ -117,16 +143,25 @@ class KidsEngagingCard extends StatelessWidget {
                           child: letter != null && Kids3DLetter.isLetter(letter)
                               ? Kids3DLetter(
                                   letter: letter!,
-                                  size: 110,
+                                  size: 118,
                                   bounceDelay: bounceDelay,
                                 )
-                              : Image.asset(
-                                  imageAsset ?? '',
-                                  fit: BoxFit.contain,
-                                  filterQuality: FilterQuality.high,
-                                  errorBuilder: (_, __, ___) => Icon(
-                                    icon ?? Icons.star_rounded,
-                                    size: 72,
+                              : Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: RadialGradient(
+                                      colors: <Color>[
+                                        Colors.white.withOpacity(0.55),
+                                        color.withOpacity(0.08),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                  child: _CardNumberOrImage(
+                                    imageAsset: imageAsset,
+                                    imageAsset2: imageAsset2,
+                                    icon: icon,
                                     color: color,
                                   ),
                                 ),
@@ -203,6 +238,59 @@ class KidsEngagingCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _CardNumberOrImage extends StatelessWidget {
+  static const String _zeroAsset = 'assets/images/80.png';
+
+  final String? imageAsset;
+  final String? imageAsset2;
+  final IconData? icon;
+  final Color color;
+
+  const _CardNumberOrImage({
+    Key? key,
+    required this.imageAsset,
+    required this.imageAsset2,
+    required this.icon,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final String? tens = imageAsset;
+    final String? ones = imageAsset2;
+
+    if (tens == null || tens.isEmpty) {
+      return Icon(icon ?? Icons.star_rounded, size: 72, color: color);
+    }
+
+    Widget digit(String path) {
+      return Image.asset(
+        path,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+        errorBuilder: (_, __, ___) =>
+            Icon(icon ?? Icons.star_rounded, size: 72, color: color),
+      );
+    }
+
+    // 0–9: only ones digit. 10–99: tens + ones side by side.
+    final bool singleDigit =
+        tens == _zeroAsset && ones != null && ones.isNotEmpty;
+
+    if (singleDigit || ones == null || ones.isEmpty) {
+      return digit(singleDigit ? ones : tens);
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(child: digit(tens)),
+        Expanded(child: digit(ones)),
+      ],
     );
   }
 }
