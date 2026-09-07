@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kids/Learning/Alphabet.dart';
-import 'package:kids/widgets/adventure_background.dart';
-import 'package:kids/widgets/adventure_card.dart';
 import 'package:kids/Learning/Animals.dart';
 import 'package:kids/Learning/Brids.dart';
 import 'package:kids/Learning/Colors.dart' as learning_colors;
@@ -12,151 +10,181 @@ import 'package:kids/Learning/Month.dart';
 import 'package:kids/Learning/Number.dart';
 import 'package:kids/Learning/Shapes.dart';
 import 'package:kids/Learning/Vegitable.dart';
-import 'package:kids/utils/app_constrant.dart';
+import 'package:kids/utils/kids_sound.dart';
+import 'package:kids/utils/kids_theme.dart';
+import 'package:kids/widgets/kids_animations.dart';
+import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_sky_background.dart';
+import 'package:kids/widgets/kids_ui_buttons.dart';
 
-// ignore: must_be_immutable
+/// One row of the main menu.
+class _Category {
+  final String title;
+  final String image;
+  final Color color;
+  final void Function(BuildContext context) open;
+
+  const _Category({
+    required this.title,
+    required this.image,
+    required this.color,
+    required this.open,
+  });
+}
+
+/// Main menu: a scrolling list of horizontal category pills, one per lesson
+/// set, each in its own accent colour.
 class LetsStartLearning extends StatelessWidget {
-  // int index;
   LetsStartLearning({Key? key}) : super(key: key);
 
-  // Define grid items structure
-  final List<Map<String, dynamic>> gridItems = [
-    {
-      'title': 'Alphabet',
-      'image': 'assets/images/number.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Alphabet())),
-    },
-    {
-      'title': 'Number',
-      'image': 'assets/images/Numbers.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Numbers())),
-    },
-    {
-      'title': 'Color',
-      'image': 'assets/images/Color.png',
-      'route': (context) => Get.to(() => learning_colors.Color()),
-    },
-    {
-      'title': 'Shape',
-      'image': 'assets/images/Shapes.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Shapes())),
-    },
-    {
-      'title': 'Animal',
-      'image': 'assets/images/Animals.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Animal())),
-    },
-    {
-      'title': 'Bird',
-      'image': 'assets/images/Birds.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Brids())),
-    },
-    {
-      'title': 'Flower',
-      'image': 'assets/images/Flowers.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Flower())),
-    },
-    {
-      'title': 'Fruit',
-      'image': 'assets/images/Fruit.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Fruits())),
-    },
-    {
-      'title': 'Month',
-      'image': 'assets/images/Month.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Month())),
-    },
-    {
-      'title': 'Vegetable',
-      'image': 'assets/images/Vegitable.png',
-      'route': (context) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Vegitable())),
-    },
-  ];
-
-  static const List<List<Color>> _cardGradients = [
-    [Color(0xFFB8E6F5), Color(0xFFFFE5A8)],
-    [Color(0xFFFFB5D0), Color(0xFFFFE5A8)],
-    [Color(0xFFA8E6A0), Color(0xFFB8D4F0)],
-    [Color(0xFFFFE5A8), Color(0xFFB8E6F5)],
-    [Color(0xFFD4C5F9), Color(0xFFB5EAD7)],
-    [Color(0xFFB5EAD7), Color(0xFF92EFA6)],
-    [Color(0xFFFFE5D9), Color(0xFFFFB5A7)],
-    [Color(0xFFFFF9E3), Color(0xFFFFDAB9)],
-    [Color(0xFFB5EAD7), Color(0xFFA8E6CF)],
-    [Color(0xFFE8E0F0), Color(0xFFB5EAD7)],
-  ];
-
-  Widget _buildGridItem(BuildContext context, Map<String, dynamic> item, int index) {
-    final gradient = _cardGradients[index % _cardGradients.length];
-    return AdventureCard(
-      onTap: () => item['route'](context),
-      gradientColors: gradient,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(item['image'], height: 72),
-            const SizedBox(height: 8),
-            AdventureText(text: item['title'], fontSize: 14),
-          ],
-        ),
-      ),
+  static void _push(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (BuildContext context) => page),
     );
   }
+
+  final List<_Category> categories = <_Category>[
+    _Category(
+      title: 'Alphabet',
+      image: 'assets/images/Alphabet.png',
+      color: KidsTheme.alphabet,
+      open: (BuildContext context) => _push(context, Alphabet()),
+    ),
+    _Category(
+      title: 'Number',
+      image: 'assets/images/Numbers.png',
+      color: KidsTheme.number,
+      open: (BuildContext context) => _push(context, Numbers()),
+    ),
+    _Category(
+      title: 'Color',
+      image: 'assets/images/Color.png',
+      color: KidsTheme.color,
+      open: (BuildContext context) => Get.to(() => learning_colors.Color()),
+    ),
+    _Category(
+      title: 'Shape',
+      image: 'assets/images/Shapes.png',
+      color: KidsTheme.shape,
+      open: (BuildContext context) => _push(context, Shapes()),
+    ),
+    _Category(
+      title: 'Animal',
+      image: 'assets/images/Animals.png',
+      color: KidsTheme.animal,
+      open: (BuildContext context) => _push(context, Animal()),
+    ),
+    _Category(
+      title: 'Bird',
+      image: 'assets/images/Birds.png',
+      color: KidsTheme.bird,
+      open: (BuildContext context) => _push(context, Brids()),
+    ),
+    _Category(
+      title: 'Flower',
+      image: 'assets/images/Flowers.png',
+      color: KidsTheme.flower,
+      open: (BuildContext context) => _push(context, Flower()),
+    ),
+    _Category(
+      title: 'Fruit',
+      image: 'assets/images/Fruit.png',
+      color: KidsTheme.fruits,
+      open: (BuildContext context) => _push(context, Fruits()),
+    ),
+    _Category(
+      title: 'Month',
+      image: 'assets/images/Month.png',
+      color: KidsTheme.navOrange,
+      open: (BuildContext context) => _push(context, Month()),
+    ),
+    _Category(
+      title: 'Vegetable',
+      image: 'assets/images/Vegitable.png',
+      color: KidsTheme.tileStartLearning,
+      open: (BuildContext context) => _push(context, Vegitable()),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AdventureBackground(
+      backgroundColor: KidsTheme.skyTop,
+      body: KidsSkyBackground(
         child: SafeArea(
           child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      color: const Color(0xFF1A5F7A),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    Expanded(
-                      child: AdventureTitle(
-                        text: "PreSchool Kids Learning",
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 48),
-                  ],
-                ),
-              ),
+            children: <Widget>[
+              _header(context),
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 0.88,
-                  ),
-                  itemCount: gridItems.length,
-                  itemBuilder: (context, index) =>
-                      _buildGridItem(context, gridItems[index], index),
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 4, bottom: 22),
+                  itemCount: categories.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final _Category category = categories[index];
+                    return KidsPopIn(
+                      delay: Duration(milliseconds: 60 * index),
+                      child: KidsCategoryPill(
+                        label: category.title,
+                        borderColor: category.color,
+                        imageAsset: category.image,
+                        bounce: true,
+                        bounceDelay: Duration(milliseconds: 50 * index),
+                        onTap: () {
+                          KidsSound.instance.whoosh();
+                          category.open(context);
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          KidsCircleNav.back(
+            onTap: () => Navigator.of(context).pop(),
+          ),
+          const Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: KidsBubbleTitle(
+                'Preschool Kids\nLearning',
+                fontSize: 30,
+                maxLines: 2,
+                rimColor: Colors.white,
+                fillColor: KidsTheme.bubbleFillBlue,
+              ),
+            ),
+          ),
+          KidsBounce(
+            offset: 8,
+            tilt: 0.05,
+            child: Image.asset(
+              'assets/images/Animals.png',
+              width: 58,
+              height: 58,
+              fit: BoxFit.contain,
+              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
+                return const Icon(
+                  Icons.pets_rounded,
+                  size: 50,
+                  color: Colors.white,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

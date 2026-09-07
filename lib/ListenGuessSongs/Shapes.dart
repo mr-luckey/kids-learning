@@ -1,225 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:kids/utils/app_constrant.dart';
+import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
-import 'package:kids/widgets/adventure_background.dart';
-import 'package:kids/widgets/adventure_card.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:kids/widgets/kids_quiz_screen.dart';
 
-import 'Alphabet.dart';
-
-class ShapesSong extends StatefulWidget {
-  @override
-  State<ShapesSong> createState() => _ShapesSongState();
-}
-
+/// Spoken shape names for the listen-and-guess round, one per question.
 List<Numbermodel> shapelist = SHAPE1();
 
-class _ShapesSongState extends State<ShapesSong> {
-  final FlutterTts flutterTts = FlutterTts();
-
-  bool isPressed = false;
-  Color istrue = Colors.green;
-  Color isWrong = Colors.red;
-  Color btnColor = Colors.blue;
-  int score = 0;
+/// "Hear the shape, tap the picture."
+class ShapesSong extends StatelessWidget {
+  const ShapesSong({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PageController _controller = new PageController(initialPage: 0);
-    return Scaffold(
-        body: AdventureBackground(
-          child: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_rounded),
-                        color: const Color(0xFF1A5F7A),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      Expanded(
-                        child: AdventureTitle(
-                          text: 'Shape',
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: PageView.builder(
-                  controller: _controller,
-                  onPageChanged: (page) {
-                    isPressed = false;
-                  },
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: alphasongs2.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Image.asset("assets/images/volume.png"),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            shapelist[index].Text!,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 23.0,
-                                fontFamily: "arlrdbd"),
-                          ),
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                        ),
-                        Expanded(
-                          child: GridView.count(
-                            padding: EdgeInsets.all(50),
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 15,
-                            crossAxisCount: 2,
-                            physics: NeverScrollableScrollPhysics(),
-                            primary: false,
-                            children: [
-                              for (int i = 0;
-                                  i < alphasongs2[index].answer.length;
-                                  i++)
-                                MaterialButton(
-                                  shape: BeveledRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  elevation: 5.0,
-                                  height: 10,
-                                  minWidth: double.infinity,
-                                  color: isPressed
-                                      ? shapesongs2[index]
-                                              .answer
-                                              .entries
-                                              .toList()[i]
-                                              .value
-                                          ? istrue
-                                          : isWrong
-                                      : Colors.white,
-                                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                                  onPressed: isPressed
-                                      ? () {}
-                                      : () {
-                                          if (shapesongs2[index]
-                                              .answer
-                                              .entries
-                                              .toList()[i]
-                                              .value) {
-                                            setState(() {
-                                              isPressed = true;
-                                            });
-                                            score += 1;
-                                          } else {
-                                            setState(() {
-                                              isPressed = true;
-                                            });
-                                          }
-                                        },
-                                  child: Image(
-                                    image: AssetImage(shapesongs2[index]
-                                        .answer
-                                        .keys
-                                        .toList()[i]),
-                                    height: 100,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                  onTap: () =>
-                                      flutterTts.speak(shapelist[index].Text!),
-                                  child: Image.asset(
-                                    'assets/images/11MaskGroup3.png',
-                                    alignment: Alignment.topCenter,
-                                  )),
-                              Center(
-                                  child: ListTile(
-                                trailing: InkWell(
-                                  onTap: isPressed
-                                      ? index + 1 == shapequestion.length
-                                          ? () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ResultSrceen(score)));
-                                            }
-                                          : () {
-                                              _controller.nextPage(
-                                                  duration: Duration(
-                                                      microseconds: 500),
-                                                  curve: Curves.linear);
-                                              flutterTts.speak(
-                                                  shapelist[index + 1].Text!);
-                                            }
-                                      : null,
-                                  child: Image(
-                                    image: AssetImage(
-                                        'assets/images/11MaskGroup5.png'),
-                                  ),
-                                ),
-                                leading: InkWell(
-                                  onTap: isPressed
-                                      ? index - 1 == questions.length
-                                          ? () {}
-                                          : () {
-                                              _controller.previousPage(
-                                                  duration: Duration(
-                                                      microseconds: 500),
-                                                  curve: Curves.linear);
-                                              flutterTts.speak(
-                                                  shapelist[index - 1].Text!);
-                                            }
-                                      : null,
-                                  child: Image(
-                                    image: AssetImage(
-                                        'assets/images/11MaskGroup4.png'),
-                                  ),
-                                ),
-                              ))
-                            ]),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        ));
+    return KidsQuizScreen(
+      title: 'Shape',
+      items: shapelist,
+      questions: shapesongs2,
+      accent: KidsTheme.shape,
+      listenMode: true,
+    );
   }
 }

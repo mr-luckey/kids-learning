@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kids/utils/kids_theme.dart';
+import 'package:kids/widgets/kids_animations.dart';
+import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_ui_buttons.dart';
 
-/// Adventure-style card with bubbly borders and organic shape.
-/// Features: white inner border, light blue bubbly outer border, soft drop shadow.
+/// Back-compat candy card used by leftover screens (video lists, settings).
 class AdventureCard extends StatelessWidget {
   final VoidCallback? onTap;
   final Widget child;
@@ -18,52 +21,24 @@ class AdventureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = borderRadius ?? BorderRadius.circular(32);
+    final Color tint =
+        gradientColors.isNotEmpty ? gradientColors.first : KidsTheme.skyTop;
+    final BorderRadius radius =
+        borderRadius ?? BorderRadius.circular(KidsTheme.radiusTile);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
+    return KidsBounce(
+      child: KidsSquish(
         onTap: onTap,
-        borderRadius: radius,
         child: Container(
           decoration: BoxDecoration(
+            gradient: KidsTheme.softFill(tint),
             borderRadius: radius,
-            boxShadow: [
-              // Soft drop shadow
-              BoxShadow(
-                color: Colors.black.withOpacity(0.12),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-                spreadRadius: -2,
-              ),
-              // Bubbly outer border (light blue glow)
-              BoxShadow(
-                color: const Color(0xFF6DD5ED).withOpacity(0.5),
-                blurRadius: 0,
-                spreadRadius: 4,
-              ),
-              // White inner border
-              BoxShadow(
-                color: Colors.white,
-                blurRadius: 0,
-                spreadRadius: 2,
-              ),
-            ],
+            border: Border.all(color: tint, width: 4),
+            boxShadow: KidsTheme.pillowShadow(tint, depth: 5),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: gradientColors,
-              ),
-              borderRadius: radius,
-              border: Border.all(color: Colors.white.withOpacity(0.9), width: 3),
-            ),
-            child: ClipRRect(
-              borderRadius: radius,
-              child: child,
-            ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: child,
           ),
         ),
       ),
@@ -71,7 +46,6 @@ class AdventureCard extends StatelessWidget {
   }
 }
 
-/// Bubbly text style: white fill with dark blue outline (stroked text effect)
 class AdventureText extends StatelessWidget {
   final String text;
   final double fontSize;
@@ -86,39 +60,15 @@ class AdventureText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Dark blue outline (stroke)
-        Text(
-          text,
-          textAlign: textAlign,
-          style: TextStyle(
-            fontFamily: "arlrdbd",
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 4
-              ..color = const Color(0xFF1A5F7A),
-          ),
-        ),
-        // White fill
-        Text(
-          text,
-          textAlign: textAlign,
-          style: TextStyle(
-            fontFamily: "arlrdbd",
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ],
+    return KidsBubbleTitle(
+      text,
+      fontSize: fontSize,
+      textAlign: textAlign,
+      fillColor: KidsTheme.bubbleFill,
     );
   }
 }
 
-/// Title text: light blue with white outline and dark shadow
 class AdventureTitle extends StatelessWidget {
   final String text;
   final double fontSize;
@@ -131,47 +81,6 @@ class AdventureTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          // Dark blue shadow
-          Text(
-          text,
-          style: TextStyle(
-            fontFamily: "arlrdbd",
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 6
-              ..color = const Color(0xFF1A5F7A),
-          ),
-        ),
-        // White outline
-        Text(
-          text,
-          style: TextStyle(
-            fontFamily: "arlrdbd",
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 3
-              ..color = Colors.white,
-          ),
-        ),
-          // Light blue fill
-          Text(
-            text,
-            style: TextStyle(
-              fontFamily: "arlrdbd",
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF6DD5ED),
-            ),
-          ),
-        ],
-      ),
-    );
+    return KidsBubbleTitle(text, fontSize: fontSize);
   }
 }

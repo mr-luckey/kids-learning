@@ -1,292 +1,288 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
-import 'package:kids/utils/ad_helper.dart';
-import 'package:kids/utils/app_constrant.dart';
-import 'package:kids/utils/video.dart';
-import 'package:kids/widgets/adventure_background.dart';
-import 'package:kids/widgets/adventure_button.dart';
-import 'package:kids/widgets/adventure_card.dart';
+import 'package:kids/Pages/LookAndChooes.dart';
+import 'package:kids/Pages/listen_and_guess.dart';
+import 'package:kids/utils/kids_sound.dart';
+import 'package:kids/utils/kids_theme.dart';
+import 'package:kids/widgets/kids_animations.dart';
+import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_sky_background.dart';
+import 'package:kids/widgets/kids_ui_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Pages/LookAndChooes.dart';
-import 'Pages/VideoLearning.dart';
-import 'Pages/listen_and_guess.dart';
-import 'dart:async';
 
+/// Activity selection screen: a 2x2 grid of big candy tiles on the animated
+/// sky + meadow background.
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Timer? _adTimer;
-  final AdManager _adManager = AdManager();
+  static const String _storeUrl =
+      'https://play.google.com/store/apps/details?id=com.appware.kidslearning';
 
   @override
   void initState() {
     super.initState();
-
-    // Show ad every 5 minutes (300 seconds) - reasonable frequency
-    _adTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_adManager.isAdReady() && _adManager.canShowAd()) {
-        _adManager.showCustomInterstitialAd(context);
-      }
-    });
+    // Warms the audio players so the very first tap clicks instantly.
+    KidsSound.instance.preload();
   }
 
-  @override
-  void dispose() {
-    _adTimer?.cancel();
-    super.dispose();
+  Future<void> _openStore() async {
+    final Uri uri = Uri.parse(_storeUrl);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      // A missing browser / store app must never crash the home screen.
+    }
   }
 
-  String url = "https://play.google.com/store/apps/details?id=" +
-      "com.appware.kidslearning";
-  int index = 0;
-  // AdmobHelper admobHelper = new AdmobHelper();
+  void _go(Widget Function() page) {
+    KidsSound.instance.whoosh();
+    Get.to(page);
+  }
+
+  Future<bool> _showExitPopup() async {
+    final bool? leave = await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black45,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+          child: KidsPopIn(child: _exitCard(context)),
+        );
+      },
+    );
+    return leave ?? false;
+  }
+
+  Widget _exitCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+      decoration: BoxDecoration(
+        gradient: KidsTheme.softFill(KidsTheme.backBlue, strength: 0.3),
+        borderRadius: BorderRadius.circular(KidsTheme.radiusTile),
+        border: Border.all(color: KidsTheme.backBlue, width: 5),
+        boxShadow: KidsTheme.pillowShadow(KidsTheme.backBlue, depth: 6),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          KidsBounce(
+            offset: 5,
+            child: Image.asset(
+              'assets/images/logo.png',
+              height: 78,
+              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
+                return const Icon(
+                  Icons.emoji_emotions_rounded,
+                  size: 70,
+                  color: KidsTheme.tileLookChoose,
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+          const KidsBubbleTitle('See you soon!', fontSize: 32),
+          const SizedBox(height: 10),
+          Text(
+            'Do you want to stop playing?',
+            textAlign: TextAlign.center,
+            style: KidsTheme.label(fontSize: 19),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: KidsPrimaryCta(
+                  label: 'Keep Playing',
+                  color: KidsTheme.tileStartLearning,
+                  icon: Icons.play_arrow_rounded,
+                  height: 60,
+                  fontSize: 20,
+                  onTap: () => Navigator.of(context).pop(false),
+                ),
+              ),
+              const SizedBox(width: 12),
+              KidsCircleNav(
+                direction: KidsNavDirection.close,
+                color: KidsTheme.wrongRed,
+                size: 60,
+                onTap: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
-
-    Future<bool> showExitPopup() async {
-      return await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              title: const Text(
-                'See you soon! 👋',
-                style: TextStyle(
-                  fontFamily: "arlrdbd",
-                  color: Color(0xFF1A5F7A),
-                  fontSize: 24,
-                ),
-              ),
-              content: const Text(
-                'Are you sure you want to leave?',
-                style: TextStyle(
-                  fontFamily: "arlrdbd",
-                  color: Colors.black87,
-                  fontSize: 18,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Stay'),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: appBarStart,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Exit'),
-                ),
+    return WillPopScope(
+      onWillPop: _showExitPopup,
+      child: Scaffold(
+        backgroundColor: KidsTheme.skyTop,
+        body: KidsSkyBackground(
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                _header(),
+                Expanded(child: _tileGrid()),
+                _footer(),
               ],
             ),
-          ) ??
-          false;
-    }
-
-    return OverflowBar(children: [
-      WillPopScope(
-        onWillPop: showExitPopup,
-        child: Scaffold(
-          body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [scaffoldBgStart, scaffoldBgEnd],
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  // Gradient app bar
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [appBarStart, appBarEnd],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: cardShadowColor,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Text(
-                      "Kids Learning",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: "arlrdbd",
-                        fontSize: 28,
-                        color: Color(0xFF1A5F7A),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const VideoApp(),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                              children: [
-                                _buildMenuCard(
-                                  onTap: () =>
-                                      Get.to(() => LetsStartLearning()),
-                                  gradient: const [
-                                    Color(0xFFD4F5DC),
-                                    Color(0xFFA8E6CF),
-                                  ],
-                                  image: "assets/images/number.png",
-                                  label: 'Start Learning',
-                                  textColor: const Color(0xFF2E7D32),
-                                ),
-                                _buildMenuCard(
-                                  onTap: () => Get.to(() => VideoLearning()),
-                                  gradient: const [
-                                    Color(0xFFFFE5D9),
-                                    Color(0xFFFFDAB9),
-                                  ],
-                                  image: "assets/images/video.png",
-                                  label: 'Video Learning',
-                                  textColor: const Color(0xFFE85D4C),
-                                ),
-                                _buildMenuCard(
-                                  onTap: () =>
-                                      Get.to(() => LookAndChooes(index)),
-                                  gradient: const [
-                                    Color(0xFFFFF9E3),
-                                    Color(0xFFFFEAA7),
-                                  ],
-                                  image: "assets/images/apple.png",
-                                  label: 'Look And Choose',
-                                  textColor: const Color(0xFFD4A017),
-                                ),
-                                _buildMenuCard(
-                                  onTap: () => Get.to(() => ListenGuess()),
-                                  gradient: const [
-                                    Color(0xFFE8E0F0),
-                                    Color(0xFFD4C5F9),
-                                  ],
-                                  image: "assets/images/lione.png",
-                                  label: 'Listen and Guess',
-                                  textColor: const Color(0xFF6B5B95),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: _openMap,
-            icon: const Icon(Icons.star_rounded, color: Colors.white),
-            label: const Text(
-              'Rate us',
-              style: TextStyle(
-                fontFamily: "arlrdbd",
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: appBarStart,
-            elevation: 4,
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildMenuCard({
-    required VoidCallback onTap,
-    required List<Color> gradient,
-    required String image,
-    required String label,
-    required Color textColor,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradient,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: cardShadowColor,
-                blurRadius: 12,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(image, height: 88),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "arlrdbd",
-                    fontSize: 16,
-                    color: textColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
     );
   }
 
-  _openMap() async {
-    const url = "https://play.google.com/store/apps/details?id=" +
-        "com.appware.kidlearning";
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  Widget _header() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 10, 18, 4),
+      child: Row(
+        children: <Widget>[
+          const Expanded(
+            child: KidsBubbleTitle(
+              'Kids Learning',
+              fontSize: 40,
+              maxLines: 2,
+              rimColor: Colors.white,
+              fillColor: KidsTheme.bubbleFillBlue,
+            ),
+          ),
+          const SizedBox(width: 10),
+          KidsBounce(
+            offset: 7,
+            tilt: 0.04,
+            child: Image.asset(
+              'assets/images/sun.png',
+              height: 68,
+              width: 68,
+              fit: BoxFit.contain,
+              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
+                return const Icon(
+                  Icons.wb_sunny_rounded,
+                  size: 60,
+                  color: KidsTheme.speakerYellow,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tileGrid() {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        const double gap = 16;
+        const EdgeInsets pad = EdgeInsets.fromLTRB(18, 8, 18, 8);
+
+        final double cellWidth =
+            (constraints.maxWidth - pad.horizontal - gap) / 2;
+        final double cellHeight =
+            (constraints.maxHeight - pad.vertical - gap) / 2;
+        // Fill the available height when we can, but never squash the tiles
+        // into letterboxes on very short screens — the grid scrolls instead.
+        final double aspect = (cellHeight > 0 && cellWidth > 0)
+            ? (cellWidth / cellHeight).clamp(0.74, 1.15)
+            : 1.0;
+
+        return GridView.count(
+          padding: pad,
+          crossAxisCount: 2,
+          mainAxisSpacing: gap,
+          crossAxisSpacing: gap,
+          childAspectRatio: aspect,
+          children: <Widget>[
+            KidsPopIn(
+              child: KidsHomeTile(
+                label: 'Start Learning',
+                color: KidsTheme.tileStartLearning,
+                imageAsset: 'assets/images/number.png',
+                icon: Icons.school_rounded,
+                bounceDelay: Duration.zero,
+                onTap: () => _go(() => LetsStartLearning()),
+              ),
+            ),
+            KidsPopIn(
+              delay: const Duration(milliseconds: 90),
+              child: KidsHomeTile(
+                label: 'Fun Quiz',
+                color: KidsTheme.tileFunQuiz,
+                imageAsset: 'assets/images/logo.png',
+                icon: Icons.extension_rounded,
+                bounceDelay: const Duration(milliseconds: 550),
+                onTap: () => _go(() => LookAndChooes(0)),
+              ),
+            ),
+            KidsPopIn(
+              delay: const Duration(milliseconds: 180),
+              child: KidsHomeTile(
+                label: 'Look And Choose',
+                color: KidsTheme.tileLookChoose,
+                imageAsset: 'assets/images/apple.png',
+                icon: Icons.touch_app_rounded,
+                bounceDelay: const Duration(milliseconds: 1100),
+                onTap: () => _go(() => LookAndChooes(0)),
+              ),
+            ),
+            KidsPopIn(
+              delay: const Duration(milliseconds: 270),
+              child: KidsHomeTile(
+                label: 'Listen and Guess',
+                color: KidsTheme.tileListenGuess,
+                imageAsset: 'assets/images/lione.png',
+                icon: Icons.hearing_rounded,
+                bounceDelay: const Duration(milliseconds: 1650),
+                onTap: () => _go(() => ListenGuess()),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _footer() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          KidsBounce(
+            offset: 9,
+            tilt: 0.05,
+            child: Image.asset(
+              'assets/images/logo.png',
+              height: 76,
+              fit: BoxFit.contain,
+              errorBuilder: (BuildContext c, Object e, StackTrace? s) {
+                return const Icon(
+                  Icons.emoji_emotions_rounded,
+                  size: 66,
+                  color: Colors.white,
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: KidsRateButton(
+              label: 'Rate us',
+              onTap: _openStore,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

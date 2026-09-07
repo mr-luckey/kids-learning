@@ -1,13 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/Alphabetssound/Alphasound.dart';
-// import 'package:kids/utils/admob.dart';
+import 'package:kids/utils/kids_sound.dart';
+import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
-import 'package:kids/widgets/adventure_background.dart';
-import 'package:kids/widgets/adventure_card.dart';
+import 'package:kids/widgets/kids_animations.dart';
+import 'package:kids/widgets/kids_bubble_title.dart';
+import 'package:kids/widgets/kids_sky_background.dart';
+import 'package:kids/widgets/kids_ui_buttons.dart';
 
 class Alphabet extends StatefulWidget {
+  const Alphabet({Key? key}) : super(key: key);
+
   @override
   State<Alphabet> createState() => _AlphabetState();
 }
@@ -15,84 +18,157 @@ class Alphabet extends StatefulWidget {
 List<Numbermodel> kidslist = KidsList1();
 
 class _AlphabetState extends State<Alphabet> {
+  void _openLetter(int index) {
+    KidsSound.instance.whoosh();
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (BuildContext context) => AlphaSound(index)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // The logo footer is the first thing to go on short screens.
+    final bool showFooter = MediaQuery.of(context).size.height >= 640;
+
     return Scaffold(
-      body: AdventureBackground(
+      body: KidsSkyBackground(
         child: SafeArea(
           child: Column(
-            children: [
+            children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
                 child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      color: const Color(0xFF1A5F7A),
-                      onPressed: () => Navigator.of(context).pop(),
+                  children: <Widget>[
+                    KidsCircleNav.back(
+                      onTap: () => Navigator.of(context).pop(),
                     ),
-                    Expanded(
-                      child: AdventureTitle(
-                        text: 'Alphabet',
-                        fontSize: 20,
+                    const Expanded(
+                      child: Center(
+                        child: KidsBubbleTitle('Alphabet', fontSize: 36),
                       ),
                     ),
-                    const SizedBox(width: 48),
+                    const SizedBox(width: 56),
                   ],
                 ),
               ),
               Expanded(
-                child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Container(
-          child: GridView.builder(
-            itemCount: kidslist.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (
-              BuildContext context,
-              int index,
-            ) {
-              final gradients = [
-                [Color(0xFFB8E6F5), Color(0xFFFFE5A8)],
-                [Color(0xFFFFB5D0), Color(0xFFFFE5A8)],
-                [Color(0xFFA8E6A0), Color(0xFFB8D4F0)],
-              ];
-              return AdventureCard(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AlphaSound(index),
-                      ));
-                },
-                gradientColors: gradients[index % gradients.length],
-                child: Center(
-                  child: Image.asset(
-                    kidslist[index].image!,
-                    height: 120,
+                child: GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(18, 10, 18, 22),
+                  itemCount: kidslist.length,
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 20,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return _LetterTile(
+                      letter: kidslist[index],
+                      accent: KidsTheme.categoryPalette[
+                          index % KidsTheme.categoryPalette.length],
+                      // Stagger over six steps so neighbours never bob in sync.
+                      bounceDelay:
+                          Duration(milliseconds: (index % 6) * 180),
+                      onTap: () => _openLetter(index),
+                    );
+                  },
+                ),
+              ),
+              if (showFooter)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: KidsBounce(
+                    offset: 4,
+                    scale: 0.02,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      height: 46,
+                      fit: BoxFit.contain,
+                      errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stack) =>
+                          const SizedBox.shrink(),
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        ),
-              ),
             ],
           ),
         ),
       ),
-      // bottomNavigationBar: Container(
-      //   height: MediaQuery.of(context).size.width *0.13,
-      //   width: 25,
-      //   child: AdWidget(
-      //     // ad:AdmobHelper.getBannerAd()..load(),
-      //   ),
-      // ),
+    );
+  }
+}
+
+/// Candy card holding one big 3D letter.
+class _LetterTile extends StatelessWidget {
+  final Numbermodel letter;
+  final Color accent;
+  final Duration bounceDelay;
+  final VoidCallback onTap;
+
+  const _LetterTile({
+    Key? key,
+    required this.letter,
+    required this.accent,
+    required this.bounceDelay,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final BorderRadius radius = BorderRadius.circular(KidsTheme.radiusTile);
+
+    final Widget card = Container(
+      decoration: BoxDecoration(
+        gradient: KidsTheme.softFill(accent, strength: 0.26),
+        borderRadius: radius,
+        border: Border.all(color: accent, width: 5),
+        boxShadow: KidsTheme.pillowShadow(accent, depth: 5),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: KidsTheme.glossSheen,
+                  borderRadius: radius,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Image.asset(
+                letter.image!,
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.medium,
+                errorBuilder:
+                    (BuildContext context, Object error, StackTrace? stack) {
+                  return KidsBubbleTitle(
+                    letter.Text ?? '',
+                    fontSize: 64,
+                    outlineColor: KidsTheme.darken(accent, 0.3),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return KidsSquish(
+      onTap: onTap,
+      pressedScale: 0.93,
+      child: KidsBounce(
+        delay: bounceDelay,
+        offset: 5,
+        scale: 0.012,
+        child: card,
+      ),
     );
   }
 }
