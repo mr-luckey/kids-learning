@@ -698,37 +698,33 @@ class KidsPrimaryCta extends StatelessWidget {
       ),
       child: Stack(
         clipBehavior: Clip.none,
+        alignment: Alignment.center,
         children: <Widget>[
           _Gloss(radius: radius),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: height * 0.16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (leadingIcon != null) ...<Widget>[
-                  _IconBubble(
-                    icon: leadingIcon!,
-                    diameter: bubble,
-                    color: base,
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                Flexible(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: KidsTheme.labelOnColor(fontSize: fontSize),
-                  ),
-                ),
-                if (showArrow) ...<Widget>[
-                  const SizedBox(width: 12),
-                  _IconBubble(icon: icon, diameter: bubble, color: base),
-                ],
-              ],
+            padding: EdgeInsets.symmetric(horizontal: height * 0.22 + bubble),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: KidsTheme.labelOnColor(fontSize: fontSize),
             ),
           ),
+          if (leadingIcon != null)
+            Positioned(
+              left: height * 0.12,
+              child: _IconBubble(
+                icon: leadingIcon!,
+                diameter: bubble,
+                color: base,
+              ),
+            ),
+          if (showArrow)
+            Positioned(
+              right: height * 0.12,
+              child: _IconBubble(icon: icon, diameter: bubble, color: base),
+            ),
         ],
       ),
     );
@@ -836,56 +832,54 @@ class KidsRateButton extends StatelessWidget {
       ),
       child: Stack(
         clipBehavior: Clip.none,
+        alignment: Alignment.center,
         children: <Widget>[
           _Gloss(radius: radius),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: height * 0.16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: bubble,
-                  height: bubble,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.star_rounded,
-                    size: bubble * 0.66,
-                    color: const Color(0xFFFFC93C),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: KidsTheme.labelOnColor(fontSize: fontSize),
-                  ),
-                ),
-                if (showStarRow) ...<Widget>[
-                  const SizedBox(width: 12),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List<Widget>.generate(
-                      3,
-                      (int i) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 1),
-                        child: Icon(
-                          Icons.star_rounded,
-                          size: fontSize * 0.82,
-                          color: const Color(0xFFFFE08A),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
+            padding: EdgeInsets.symmetric(horizontal: height * 0.22 + bubble),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: KidsTheme.labelOnColor(fontSize: fontSize),
             ),
           ),
+          Positioned(
+            left: height * 0.12,
+            child: Container(
+              width: bubble,
+              height: bubble,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.star_rounded,
+                size: bubble * 0.66,
+                color: const Color(0xFFFFC93C),
+              ),
+            ),
+          ),
+          if (showStarRow)
+            Positioned(
+              right: height * 0.14,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List<Widget>.generate(
+                  3,
+                  (int i) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    child: Icon(
+                      Icons.star_rounded,
+                      size: fontSize * 0.82,
+                      color: const Color(0xFFFFE08A),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -1,6 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:kids/utils/app_constrant.dart';
 
 class InterstitialAdManager {
   static final InterstitialAdManager _instance =
@@ -13,39 +13,28 @@ class InterstitialAdManager {
   static int _currentAdIndex = 0;
   static bool _isAdShown = false;
   static DateTime? _lastAdShown;
-  static const int _minAdInterval = 30; // Minimum 3 minutes between ads
+  static const int _minAdInterval = 30; // seconds between shows
 
-  // Add your 10 ad unit IDs here
-  static final List<String> _adUnitIds = [
-    'ca-app-pub-5561438827097019/9820910070'
-        'ca-app-pub-5561438827097019/2133991744'
-        'ca-app-pub-5561438827097019/7138906414'
-        'ca-app-pub-5561438827097019/8208445507'
-        'ca-app-pub-5561438827097019/4760155089'
-        'ca-app-pub-5561438827097019/1353864092',
-    'ca-app-pub-5561438827097019/5780435518',
-    'ca-app-pub-5561438827097019/6386940177',
-    'ca-app-pub-5561438827097019/5073858504',
-    'ca-app-pub-5561438827097019/3760776834',
-    'ca-app-pub-5561438827097019/8163056276',
-    'ca-app-pub-5561438827097019/5536892937',
-    'ca-app-pub-5561438827097019/1025952228',
-    'ca-app-pub-5561438827097019/6414619084',
-    'ca-app-pub-5561438827097019/5101537414',
-  ];
+  List<String> get _adUnitIds => activeInterstitialAdUnitIds;
 
   void initialize() {
+    if (kUseTestAds) {
+      print('AdMob test mode ON — using Google sample interstitial IDs');
+    }
     _loadNextAd();
   }
 
   void _loadNextAd() {
     if (_isAdLoading) return;
-    _isAdLoading = true;
+    final List<String> ids = _adUnitIds;
+    if (ids.isEmpty) return;
 
-    print('Loading interstitial ad with ID: ${_adUnitIds[_currentAdIndex]}');
+    _isAdLoading = true;
+    final String unitId = ids[_currentAdIndex % ids.length];
+    print('Loading interstitial ad with ID: $unitId');
 
     InterstitialAd.load(
-      adUnitId: _adUnitIds[_currentAdIndex],
+      adUnitId: unitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -57,7 +46,12 @@ class InterstitialAdManager {
         onAdFailedToLoad: (LoadAdError error) {
           print('Interstitial ad failed to load: ${error.message}');
           _isAdLoading = false;
-          _tryNextAd();
+          // Retry the same placement later — do not waterfall other unit IDs.
+          Future<void>.delayed(const Duration(seconds: 30), () {
+            if (_currentAd == null && !_isAdLoading) {
+              _loadNextAd();
+            }
+          });
         },
       ),
     );
@@ -70,14 +64,14 @@ class InterstitialAdManager {
         ad.dispose();
         _currentAd = null;
         _isAdShown = false;
-        _tryNextAd();
+        _advancePlacementAndReload();
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
         print('Interstitial ad failed to show: ${error.message}');
         ad.dispose();
         _currentAd = null;
         _isAdShown = false;
-        _tryNextAd();
+        _advancePlacementAndReload();
       },
       onAdShowedFullScreenContent: (InterstitialAd ad) {
         print('Interstitial ad showed full screen content');
@@ -90,8 +84,12 @@ class InterstitialAdManager {
     );
   }
 
-  void _tryNextAd() {
-    _currentAdIndex = (_currentAdIndex + 1) % _adUnitIds.length;
+  /// After a successful show cycle, rotate to the next *named* placement index
+  /// for the next preload (not a no-fill chase).
+  void _advancePlacementAndReload() {
+    final List<String> ids = _adUnitIds;
+    if (ids.isEmpty) return;
+    _currentAdIndex = (_currentAdIndex + 1) % ids.length;
     _loadNextAd();
   }
 
@@ -102,17 +100,17 @@ class InterstitialAdManager {
   bool canShowAd() {
     if (_lastAdShown == null) return true;
 
-    final timeSinceLastAd = DateTime.now().difference(_lastAdShown!).inSeconds;
+    final int timeSinceLastAd =
+        DateTime.now().difference(_lastAdShown!).inSeconds;
     return timeSinceLastAd >= _minAdInterval;
   }
 
   void showAd(BuildContext context) {
-    // Check if enough time has passed since last ad
     if (!canShowAd()) {
-      final timeSinceLastAd =
+      final int timeSinceLastAd =
           DateTime.now().difference(_lastAdShown!).inSeconds;
-      final timeRemaining = _minAdInterval - timeSinceLastAd;
-      print('Ad shown too recently. Please wait ${timeRemaining} seconds');
+      final int timeRemaining = _minAdInterval - timeSinceLastAd;
+      print('Ad shown too recently. Please wait $timeRemaining seconds');
       return;
     }
 
@@ -155,7 +153,6 @@ class _CustomInterstitialAdWidgetState
   @override
   void initState() {
     super.initState();
-    // Show close button after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
@@ -164,7 +161,6 @@ class _CustomInterstitialAdWidgetState
       }
     });
 
-    // Show the actual interstitial ad
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_adShown) {
         _showInterstitialAd();
@@ -207,7 +203,6 @@ class _CustomInterstitialAdWidgetState
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Full screen ad content
           Center(
             child: Container(
               width: double.infinity,
@@ -234,7 +229,6 @@ class _CustomInterstitialAdWidgetState
               ),
             ),
           ),
-          // Close button - Always visible
           Positioned(
             top: 50,
             right: 20,
@@ -250,7 +244,7 @@ class _CustomInterstitialAdWidgetState
                     width: 2,
                   ),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.close,
                   color: Colors.white,
                   size: 28,
@@ -258,7 +252,6 @@ class _CustomInterstitialAdWidgetState
               ),
             ),
           ),
-          // Skip button at bottom
           Positioned(
             bottom: 50,
             right: 20,

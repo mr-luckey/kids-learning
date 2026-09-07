@@ -166,95 +166,160 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Brand-forward hero: title + mascot composition (not a dashboard strip).
+  /// Brand-forward hero: one candy composition with title + mascot.
   Widget _hero() {
+    final BorderRadius radius = BorderRadius.circular(34);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: KidsPopIn(
         child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+          height: 148,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: <Color>[
-                Colors.white.withOpacity(0.92),
-                const Color(0xFFD9F0FF).withOpacity(0.88),
-                const Color(0xFFFFF0C2).withOpacity(0.75),
+                Color(0xFFFFFFFF),
+                Color(0xFFE8F7FF),
+                Color(0xFFFFF6D6),
               ],
+              stops: <double>[0.0, 0.55, 1.0],
             ),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white, width: 4),
+            borderRadius: radius,
+            border: Border.all(color: KidsTheme.backBlue, width: 5),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: KidsTheme.backBlue.withOpacity(0.28),
+                color: KidsTheme.darken(KidsTheme.backBlue, 0.12).withOpacity(0.85),
                 blurRadius: 0,
-                offset: const Offset(0, 6),
+                offset: const Offset(0, 7),
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.12),
+                color: KidsTheme.backBlue.withOpacity(0.32),
                 blurRadius: 18,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const KidsBubbleTitle(
-                      'Kids Learning',
-                      fontSize: 34,
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
-                      rimColor: Colors.white,
-                      fillColor: KidsTheme.bubbleFillBlue,
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 56,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
                       decoration: BoxDecoration(
-                        color: KidsTheme.tileStartLearning.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: KidsTheme.tileStartLearning.withOpacity(0.55),
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        'Play • Learn • Smile',
-                        style: KidsTheme.label(
-                          fontSize: 15,
-                          color: KidsTheme.darken(KidsTheme.tileStartLearning, 0.28),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            Colors.white.withOpacity(0.9),
+                            Colors.white.withOpacity(0.0),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 6),
-              KidsBounce(
-                offset: 8,
-                tilt: 0.05,
-                child: Image.asset(
-                  'assets/ui/letter_A.png',
-                  height: 96,
-                  width: 96,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high,
-                  errorBuilder: (_, __, ___) => const Icon(
-                    Icons.wb_sunny_rounded,
-                    size: 72,
-                    color: KidsTheme.speakerYellow,
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  bottom: -36,
+                  left: -28,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: KidsTheme.tileStartLearning.withOpacity(0.16),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 14,
+                  right: 110,
+                  child: Row(
+                    children: List<Widget>.generate(3, (int i) {
+                      return Container(
+                        width: 9,
+                        height: 9,
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: KidsTheme.backBlue.withOpacity(0.35 + i * 0.18),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.8),
+                            width: 1.2,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 16, 10, 14),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const KidsBubbleTitle(
+                              'Kids Learning',
+                              fontSize: 36,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              rimColor: Colors.white,
+                              fillColor: KidsTheme.bubbleFillBlue,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Play · Learn · Smile',
+                              style: KidsTheme.label(
+                                fontSize: 16,
+                                color: KidsTheme.inkDark.withOpacity(0.72),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      KidsBounce(
+                        offset: 8,
+                        tilt: 0.05,
+                        child: Container(
+                          width: 108,
+                          height: 108,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: RadialGradient(
+                              colors: <Color>[
+                                Colors.white.withOpacity(0.95),
+                                KidsTheme.backBlue.withOpacity(0.18),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/ui/letter_A.png',
+                            fit: BoxFit.contain,
+                            filterQuality: FilterQuality.high,
+                            errorBuilder: (_, __, ___) => const Icon(
+                              Icons.wb_sunny_rounded,
+                              size: 72,
+                              color: KidsTheme.speakerYellow,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
