@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _go(Widget Function() page) {
     KidsSound.instance.whoosh();
-    AdManager().showInterstitial();
+    AdManager().showInterstitial(placement: 'section_open');
     Get.to(page);
   }
 
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: _showExitPopup,
       child: Scaffold(
         backgroundColor: KidsTheme.skyTop,
-        bottomNavigationBar: const BannerAdWidget(),
+        bottomNavigationBar: const BannerAdWidget(placement: 'home'),
         body: KidsSkyBackground(
           horizon: 0.78,
           cloudCount: 6,

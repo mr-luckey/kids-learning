@@ -1,29 +1,25 @@
-import 'package:flutter/material.dart';
-import 'interstitial_ad_manager.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:kids/services/app_services.dart';
+
+/// Thin facade kept for existing call sites. Prefer [AppServices.ads] for new code.
 class AdManager {
   static final AdManager _instance = AdManager._internal();
   factory AdManager() => _instance;
   AdManager._internal();
 
-  final InterstitialAdManager _interstitialManager = InterstitialAdManager();
-
   void initialize() {
-    _interstitialManager.initialize();
+    // Ads bootstrap lives in [AppServices.start]. Kept for call-site compatibility.
   }
 
-  bool isAdReady() => _interstitialManager.isAdReady();
+  bool isAdReady() => AppServices.ads.isReady;
 
-  bool canShowAd() => _interstitialManager.canShowAd();
+  bool canShowAd() => !AppServices.ads.isFullScreenShowing;
 
-  /// Shows a preloaded interstitial when ready and the min interval has passed.
-  void showInterstitial() {
-    if (_interstitialManager.isAdReady() && _interstitialManager.canShowAd()) {
-      _interstitialManager.showAd();
-    } else if (!_interstitialManager.isAdReady()) {
-      // Keep a unit warm for the next natural break.
-      _interstitialManager.ensureLoaded();
-    }
+  /// Shows a preloaded interstitial for a named placement when frequency allows.
+  void showInterstitial({String placement = 'section_open'}) {
+    unawaited(AppServices.ads.showInterstitial(placement: placement));
   }
 
   @Deprecated('Use showInterstitial()')
@@ -32,6 +28,6 @@ class AdManager {
   }
 
   void dispose() {
-    _interstitialManager.dispose();
+    unawaited(AppServices.ads.dispose());
   }
 }

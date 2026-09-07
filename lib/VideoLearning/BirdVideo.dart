@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/utils/banner_ad_widget.dart';
 // import 'package:kids/utils/admob.dart';
 import 'package:kids/utils/model.dart';
@@ -94,7 +93,7 @@ class _BirdVideoState extends State<BirdVideo> {
           ),
         ),
       ),
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'video'),
     );
   }
 }

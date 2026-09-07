@@ -25,7 +25,7 @@ class KidsLearningGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'learning'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

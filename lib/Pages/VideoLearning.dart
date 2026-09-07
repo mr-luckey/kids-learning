@@ -108,7 +108,7 @@ class _VideoLearningState extends State<VideoLearning> {
 
   void _open(_VideoEntry entry) {
     KidsSound.instance.whoosh();
-    AdManager().showInterstitial();
+    AdManager().showInterstitial(placement: 'after_video');
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -121,7 +121,7 @@ class _VideoLearningState extends State<VideoLearning> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'video'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

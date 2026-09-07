@@ -24,7 +24,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'settings'),
       body: AdventureBackground(
         child: SafeArea(
           child: Column(

@@ -15,10 +15,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 10.0.2+12
+version: 15.0.0+15
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -45,6 +45,13 @@ dependencies:
   video_player: ^2.9.5
   get: ^4.6.6
   audioplayers: ^6.8.1
+  connectivity_plus: ^7.3.1
+  flutter_local_notifications: ^21.0.0
+  timezone: ^0.11.1
+  flutter_timezone: ^5.1.0
+  shared_preferences: ^2.5.5
+  firebase_core: ^3.4.0
+  firebase_analytics: ^11.3.0
 
 dev_dependencies:
   flutter_test:
@@ -89,7 +96,7 @@ flutter:
     - assets/images/
     - assets/sounds/
     - assets/ui/
-    - assets/
+    - assets/notifications/
 
 
   #   - images/a_dot_ham.jpeg

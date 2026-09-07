@@ -8,15 +8,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { localProperties.load(it) }
-}
-
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "12"
-val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "10.0"
-
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
@@ -29,6 +20,7 @@ android {
     ndkVersion = "28.2.13676358"
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -47,8 +39,9 @@ android {
         applicationId = "com.appware.kidlearning"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInt()
-        versionName = flutterVersionName
+        // Always from pubspec.yaml (`version: name+code`).
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
         ndk {
             abiFilters += listOf("arm64-v8a")
         }
@@ -94,7 +87,8 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.android.gms:play-services-ads:22.6.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // AdMob comes from google_mobile_ads Flutter plugin — do not duplicate.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.0")
     implementation("com.google.android.material:material:1.11.0")
 }

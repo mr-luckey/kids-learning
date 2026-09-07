@@ -111,7 +111,7 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
     final bool isLetter = Kids3DLetter.isLetter(badge);
 
     return Scaffold(
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'learning'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

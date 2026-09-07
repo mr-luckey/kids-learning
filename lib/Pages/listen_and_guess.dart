@@ -126,7 +126,7 @@ class _ListenGuessState extends State<ListenGuess> {
       await flutterTts.speak(entry.speak);
     } catch (_) {}
     if (!mounted) return;
-    AdManager().showInterstitial();
+    AdManager().showInterstitial(placement: 'category_open');
     Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (BuildContext context) => entry.build()),
@@ -137,7 +137,7 @@ class _ListenGuessState extends State<ListenGuess> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'quiz'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

@@ -36,7 +36,7 @@ class LetsStartLearning extends StatelessWidget {
   LetsStartLearning({Key? key}) : super(key: key);
 
   static void _push(BuildContext context, Widget page) {
-    AdManager().showInterstitial();
+    AdManager().showInterstitial(placement: 'category_open');
     Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (BuildContext context) => page),
@@ -61,7 +61,7 @@ class LetsStartLearning extends StatelessWidget {
       image: 'assets/ui/cat_Color.png',
       color: KidsTheme.color,
       open: (BuildContext context) {
-        AdManager().showInterstitial();
+        AdManager().showInterstitial(placement: 'category_open');
         Get.to(() => learning_colors.Color());
       },
     ),
@@ -113,7 +113,7 @@ class LetsStartLearning extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'learning'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

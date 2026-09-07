@@ -103,7 +103,7 @@ class LookAndChooes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'quiz'),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(
@@ -136,7 +136,7 @@ class LookAndChooes extends StatelessWidget {
                         bounceDelay: Duration(milliseconds: 80 * i),
                         onTap: () {
                           KidsSound.instance.whoosh();
-                          AdManager().showInterstitial();
+                          AdManager().showInterstitial(placement: 'category_open');
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(

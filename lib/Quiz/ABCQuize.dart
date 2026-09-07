@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:kids/homeScreen.dart';
+import 'package:kids/services/ads_service.dart';
+import 'package:kids/services/app_services.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
@@ -54,10 +57,19 @@ class ResultSrceen extends StatefulWidget {
 
 class _ResultSrceenState extends State<ResultSrceen> {
   int _burst = 0;
+  bool _rewardBusy = false;
+  bool _bonusClaimed = false;
+  bool _navigating = false;
 
   @override
   void initState() {
     super.initState();
+    unawaited(
+      AppServices.ads.preloadRewarded(placement: 'bonus_cheer'),
+    );
+    unawaited(
+      AppServices.ads.preloadInterstitial(placement: 'after_quiz'),
+    );
     WidgetsBinding.instance.addPostFrameCallback((Duration _) {
       if (!mounted) return;
       KidsSound.instance.success();
@@ -83,7 +95,7 @@ class _ResultSrceenState extends State<ResultSrceen> {
     return 0;
   }
 
-  void _playAgain() {
+  void _goPlayAgain() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
       return;
@@ -91,10 +103,78 @@ class _ResultSrceenState extends State<ResultSrceen> {
     Get.offAll(HomeScreen());
   }
 
+  Future<void> _playAgain() async {
+    if (_rewardBusy || _navigating) return;
+    setState(() {
+      _rewardBusy = true;
+      _navigating = true;
+    });
+
+    final RewardedAdOutcome outcome =
+        await AppServices.ads.showRewarded(placement: 'play_again');
+    if (!mounted) return;
+
+    if (outcome == RewardedAdOutcome.earned) {
+      unawaited(
+        AppServices.analytics.logRewardedAdCompleted(
+          placement: 'play_again',
+          source: 'quiz_result_play_again',
+        ),
+      );
+      KidsSound.instance.sparkle();
+    }
+
+    setState(() {
+      _rewardBusy = false;
+      _navigating = false;
+    });
+    _goPlayAgain();
+  }
+
+  Future<void> _goHome() async {
+    if (_navigating) return;
+    setState(() => _navigating = true);
+    await AppServices.ads.showInterstitial(placement: 'after_quiz');
+    if (!mounted) return;
+    Get.offAll(HomeScreen());
+  }
+
+  Future<void> _watchBonusCheer() async {
+    if (_rewardBusy || _bonusClaimed || _navigating) return;
+    setState(() => _rewardBusy = true);
+    final RewardedAdOutcome outcome =
+        await AppServices.ads.showRewarded(placement: 'bonus_cheer');
+    if (!mounted) return;
+    setState(() => _rewardBusy = false);
+
+    if (outcome != RewardedAdOutcome.earned) {
+      if (outcome == RewardedAdOutcome.unavailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Bonus cheer is not ready yet')),
+        );
+      }
+      return;
+    }
+
+    // Reward only after onUserEarnedReward — extra celebration, no fake currency.
+    unawaited(
+      AppServices.analytics.logRewardedAdCompleted(
+        placement: 'bonus_cheer',
+        source: 'quiz_result',
+      ),
+    );
+    setState(() {
+      _bonusClaimed = true;
+      _burst++;
+    });
+    KidsSound.instance.sparkle();
+    KidsSound.instance.success();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'quiz'),
       body: KidsSkyBackground(
         child: Stack(
           children: <Widget>[
@@ -126,11 +206,33 @@ class _ResultSrceenState extends State<ResultSrceen> {
                       child: _starRow(),
                     ),
                     const SizedBox(height: 26),
+                    if (!_bonusClaimed)
+                      KidsPrimaryCta(
+                        label: _rewardBusy
+                            ? 'Loading…'
+                            : 'Bonus Cheer!',
+                        color: KidsTheme.tileFunQuiz,
+                        leadingIcon: Icons.auto_awesome_rounded,
+                        showArrow: false,
+                        pulse: !_rewardBusy,
+                        enabled: !_rewardBusy,
+                        onTap: _watchBonusCheer,
+                      ),
+                    if (!_bonusClaimed) const SizedBox(height: 14),
+                    if (_bonusClaimed)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 14),
+                        child: Text(
+                          'Bonus cheer unlocked!',
+                          style: KidsTheme.label(fontSize: 18),
+                        ),
+                      ),
                     KidsPrimaryCta(
-                      label: 'Play Again',
+                      label: _rewardBusy ? 'Loading…' : 'Play Again',
                       color: KidsTheme.correctGreen,
                       leadingIcon: Icons.refresh_rounded,
                       showArrow: false,
+                      enabled: !_rewardBusy && !_navigating,
                       onTap: _playAgain,
                     ),
                     const SizedBox(height: 14),
@@ -140,7 +242,8 @@ class _ResultSrceenState extends State<ResultSrceen> {
                       leadingIcon: Icons.home_rounded,
                       showArrow: false,
                       pulse: false,
-                      onTap: () => Get.offAll(HomeScreen()),
+                      enabled: !_navigating,
+                      onTap: _goHome,
                     ),
                     const SizedBox(height: 10),
                   ],

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kids/homeScreen.dart';
-import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/services/app_services.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -11,8 +10,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Warms the effect players so the very first tap is not silent.
   await KidsSound.instance.preload();
-  await MobileAds.instance.initialize();
-  AdManager().initialize();
+  // Analytics / offline notifications / network-aware ads (non-blocking).
+  await AppServices.start();
 
   runApp(const MyApp());
 }

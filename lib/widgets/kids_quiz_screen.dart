@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kids/Quiz/ABCQuize.dart';
+import 'package:kids/services/app_services.dart';
+import 'package:kids/utils/ad_helper.dart';
 import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
@@ -80,6 +83,12 @@ class _KidsQuizScreenState extends State<KidsQuizScreen> {
   @override
   void initState() {
     super.initState();
+    unawaited(
+      AppServices.analytics.logLevelStarted(
+        source: widget.listenMode ? 'listen_guess' : 'look_choose',
+        difficulty: widget.title,
+      ),
+    );
     if (!widget.listenMode || _questionCount == 0) return;
 
     _tts = FlutterTts()
@@ -173,6 +182,14 @@ class _KidsQuizScreenState extends State<KidsQuizScreen> {
     if (!_answered || _turning) return;
 
     if (_index + 1 >= _questionCount) {
+      unawaited(
+        AppServices.analytics.logLevelCompleted(
+          source: widget.listenMode ? 'listen_guess' : 'look_choose',
+          difficulty: widget.title,
+          moves: score,
+        ),
+      );
+      AdManager().showInterstitial(placement: 'after_quiz');
       Navigator.push(
         context,
         MaterialPageRoute<void>(
@@ -211,7 +228,7 @@ class _KidsQuizScreenState extends State<KidsQuizScreen> {
     final bool isLast = _index + 1 >= _questionCount;
 
     return Scaffold(
-      bottomNavigationBar: const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(placement: 'quiz'),
       body: KidsSkyBackground(
         child: Stack(
           children: <Widget>[

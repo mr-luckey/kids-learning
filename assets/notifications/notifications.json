@@ -1,0 +1,24 @@
+{
+  "notifications": [
+    {
+      "id": "daily_001",
+      "title": "Time to learn something new!",
+      "body": "Pick a letter, number, or animal and play for a few minutes."
+    },
+    {
+      "id": "daily_002",
+      "title": "Ready for another round?",
+      "body": "A fun quiz is waiting for you."
+    },
+    {
+      "id": "daily_003",
+      "title": "A few minutes is all it takes",
+      "body": "Come back and learn one more word today."
+    },
+    {
+      "id": "daily_004",
+      "title": "Your next lesson is waiting",
+      "body": "Open Kids Learning and keep practicing."
+    }
+  ]
+}
