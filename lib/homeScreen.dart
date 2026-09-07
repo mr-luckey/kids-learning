@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:kids/Pages/LetsStartLearning.dart';
 import 'package:kids/Pages/LookAndChooes.dart';
 import 'package:kids/Pages/listen_and_guess.dart';
+import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _go(Widget Function() page) {
     KidsSound.instance.whoosh();
+    AdManager().showInterstitial();
     Get.to(page);
   }
 
@@ -119,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: _showExitPopup,
       child: Scaffold(
         backgroundColor: KidsTheme.skyTop,
+        bottomNavigationBar: const BannerAdWidget(),
         body: KidsSkyBackground(
           horizon: 0.78,
           cloudCount: 6,
@@ -129,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     _hero(),
                     Expanded(child: _playboard()),
-                    const SizedBox(height: 96),
+                    const SizedBox(height: 88),
                   ],
                 ),
                 Positioned(
@@ -166,39 +170,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Brand-forward hero: one candy composition with title + mascot.
+  /// Brand-forward hero: ABC Learning title + letter mascot.
   Widget _hero() {
-    final BorderRadius radius = BorderRadius.circular(34);
+    const Color brand = KidsTheme.alphabet;
+    final BorderRadius radius = BorderRadius.circular(32);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: KidsPopIn(
         child: Container(
-          height: 148,
+          height: 152,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: <Color>[
-                Color(0xFFFFFFFF),
-                Color(0xFFE8F7FF),
-                Color(0xFFFFF6D6),
+                Colors.white,
+                KidsTheme.lighten(brand, 0.32),
+                KidsTheme.lighten(KidsTheme.fruits, 0.28),
               ],
-              stops: <double>[0.0, 0.55, 1.0],
+              stops: const <double>[0.0, 0.55, 1.0],
             ),
             borderRadius: radius,
-            border: Border.all(color: KidsTheme.backBlue, width: 5),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: KidsTheme.darken(KidsTheme.backBlue, 0.12).withOpacity(0.85),
-                blurRadius: 0,
-                offset: const Offset(0, 7),
-              ),
-              BoxShadow(
-                color: KidsTheme.backBlue.withOpacity(0.32),
-                blurRadius: 18,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            border: Border.all(color: brand, width: 5),
+            boxShadow: KidsTheme.pillowShadow(brand, depth: 6),
           ),
           child: ClipRRect(
             borderRadius: radius,
@@ -208,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: 56,
+                  height: 52,
                   child: IgnorePointer(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -216,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: <Color>[
-                            Colors.white.withOpacity(0.9),
+                            Colors.white.withOpacity(0.95),
                             Colors.white.withOpacity(0.0),
                           ],
                         ),
@@ -225,42 +219,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  bottom: -36,
-                  left: -28,
+                  bottom: -40,
+                  right: -20,
                   child: IgnorePointer(
                     child: Container(
-                      width: 120,
-                      height: 120,
+                      width: 130,
+                      height: 130,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: KidsTheme.tileStartLearning.withOpacity(0.16),
+                        color: KidsTheme.fruits.withOpacity(0.22),
                       ),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 14,
-                  right: 110,
-                  child: Row(
-                    children: List<Widget>.generate(3, (int i) {
-                      return Container(
-                        width: 9,
-                        height: 9,
-                        margin: const EdgeInsets.only(left: 5),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: KidsTheme.backBlue.withOpacity(0.35 + i * 0.18),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.8),
-                            width: 1.2,
-                          ),
-                        ),
-                      );
-                    }),
+                  top: -28,
+                  left: -24,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: brand.withOpacity(0.18),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 16, 10, 14),
+                  padding: const EdgeInsets.fromLTRB(18, 14, 8, 12),
                   child: Row(
                     children: <Widget>[
                       Expanded(
@@ -269,19 +256,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             const KidsBubbleTitle(
-                              'Kids Learning',
-                              fontSize: 36,
+                              'ABC Learning',
+                              fontSize: 34,
                               maxLines: 2,
                               textAlign: TextAlign.left,
-                              rimColor: Colors.white,
-                              fillColor: KidsTheme.bubbleFillBlue,
+                              fillColor: Colors.white,
+                              outlineColor: Color(0xFFC45A12),
+                              rimColor: Color(0xFFFFE0B8),
+                              letterSpacing: 0.6,
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Play · Learn · Smile',
-                              style: KidsTheme.label(
-                                fontSize: 16,
-                                color: KidsTheme.inkDark.withOpacity(0.72),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.88),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: brand.withOpacity(0.35),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                'Play · Learn · Smile',
+                                style: KidsTheme.label(
+                                  fontSize: 15,
+                                  color: KidsTheme.inkDark,
+                                ),
                               ),
                             ),
                           ],
@@ -297,20 +300,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: <Color>[
-                                Colors.white.withOpacity(0.95),
-                                KidsTheme.backBlue.withOpacity(0.18),
+                                Colors.white,
+                                KidsTheme.lighten(brand, 0.35).withOpacity(0.7),
                                 Colors.transparent,
                               ],
                             ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: brand.withOpacity(0.28),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: Image.asset(
                             'assets/ui/letter_A.png',
                             fit: BoxFit.contain,
                             filterQuality: FilterQuality.high,
                             errorBuilder: (_, __, ___) => const Icon(
-                              Icons.wb_sunny_rounded,
+                              Icons.abc_rounded,
                               size: 72,
-                              color: KidsTheme.speakerYellow,
+                              color: KidsTheme.alphabet,
                             ),
                           ),
                         ),
@@ -354,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               child: Row(
                 children: <Widget>[
                   KidsBounce(
@@ -398,11 +408,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _tileGrid() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
       child: GridView.count(
         physics: const BouncingScrollPhysics(),
         crossAxisCount: 2,
-        mainAxisSpacing: 14,
+        mainAxisSpacing: 22,
         crossAxisSpacing: 12,
         childAspectRatio: 0.82,
         children: <Widget>[

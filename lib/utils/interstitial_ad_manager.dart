@@ -19,9 +19,16 @@ class InterstitialAdManager {
 
   void initialize() {
     if (kUseTestAds) {
-      print('AdMob test mode ON — using Google sample interstitial IDs');
+      debugPrint('AdMob test mode ON — using Google sample interstitial IDs');
     }
     _loadNextAd();
+  }
+
+  /// Preload if nothing is loaded / loading.
+  void ensureLoaded() {
+    if (_currentAd == null && !_isAdLoading) {
+      _loadNextAd();
+    }
   }
 
   void _loadNextAd() {
@@ -31,20 +38,20 @@ class InterstitialAdManager {
 
     _isAdLoading = true;
     final String unitId = ids[_currentAdIndex % ids.length];
-    print('Loading interstitial ad with ID: $unitId');
+    debugPrint('Loading interstitial ad with ID: $unitId');
 
     InterstitialAd.load(
       adUnitId: unitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
-          print('Interstitial ad loaded successfully');
+          debugPrint('Interstitial ad loaded successfully');
           _currentAd = ad;
           _isAdLoading = false;
           _setupAdCallbacks();
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print('Interstitial ad failed to load: ${error.message}');
+          debugPrint('Interstitial ad failed to load: ${error.message}');
           _isAdLoading = false;
           // Retry the same placement later — do not waterfall other unit IDs.
           Future<void>.delayed(const Duration(seconds: 30), () {
@@ -60,26 +67,26 @@ class InterstitialAdManager {
   void _setupAdCallbacks() {
     _currentAd?.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('Interstitial ad dismissed by user');
+        debugPrint('Interstitial ad dismissed by user');
         ad.dispose();
         _currentAd = null;
         _isAdShown = false;
         _advancePlacementAndReload();
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('Interstitial ad failed to show: ${error.message}');
+        debugPrint('Interstitial ad failed to show: ${error.message}');
         ad.dispose();
         _currentAd = null;
         _isAdShown = false;
         _advancePlacementAndReload();
       },
       onAdShowedFullScreenContent: (InterstitialAd ad) {
-        print('Interstitial ad showed full screen content');
+        debugPrint('Interstitial ad showed full screen content');
         _isAdShown = true;
         _lastAdShown = DateTime.now();
       },
       onAdImpression: (InterstitialAd ad) {
-        print('Interstitial ad impression recorded');
+        debugPrint('Interstitial ad impression recorded');
       },
     );
   }
@@ -105,20 +112,20 @@ class InterstitialAdManager {
     return timeSinceLastAd >= _minAdInterval;
   }
 
-  void showAd(BuildContext context) {
+  void showAd([BuildContext? context]) {
     if (!canShowAd()) {
       final int timeSinceLastAd =
           DateTime.now().difference(_lastAdShown!).inSeconds;
       final int timeRemaining = _minAdInterval - timeSinceLastAd;
-      print('Ad shown too recently. Please wait $timeRemaining seconds');
+      debugPrint('Ad shown too recently. Please wait $timeRemaining seconds');
       return;
     }
 
     if (_currentAd != null && !_isAdShown) {
-      print('Showing interstitial ad');
+      debugPrint('Showing interstitial ad');
       _currentAd?.show();
     } else {
-      print('No ad available to show');
+      debugPrint('No ad available to show');
       _loadNextAd();
     }
   }

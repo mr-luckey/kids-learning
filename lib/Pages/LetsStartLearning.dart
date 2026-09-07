@@ -10,6 +10,8 @@ import 'package:kids/Learning/Month.dart';
 import 'package:kids/Learning/Number.dart';
 import 'package:kids/Learning/Shapes.dart';
 import 'package:kids/Learning/Vegitable.dart';
+import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
@@ -34,6 +36,7 @@ class LetsStartLearning extends StatelessWidget {
   LetsStartLearning({Key? key}) : super(key: key);
 
   static void _push(BuildContext context, Widget page) {
+    AdManager().showInterstitial();
     Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (BuildContext context) => page),
@@ -57,7 +60,10 @@ class LetsStartLearning extends StatelessWidget {
       title: 'Color',
       image: 'assets/ui/cat_Color.png',
       color: KidsTheme.color,
-      open: (BuildContext context) => Get.to(() => learning_colors.Color()),
+      open: (BuildContext context) {
+        AdManager().showInterstitial();
+        Get.to(() => learning_colors.Color());
+      },
     ),
     _Category(
       title: 'Shape',
@@ -107,6 +113,7 @@ class LetsStartLearning extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

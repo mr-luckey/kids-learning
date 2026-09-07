@@ -9,6 +9,8 @@ import 'package:kids/Quiz/MonthQuize.dart';
 import 'package:kids/Quiz/NumberQuiz.dart';
 import 'package:kids/Quiz/ShapeQuiz.dart';
 import 'package:kids/Quiz/VegitableQuiz.dart';
+import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
@@ -101,6 +103,7 @@ class LookAndChooes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(
@@ -133,6 +136,7 @@ class LookAndChooes extends StatelessWidget {
                         bounceDelay: Duration(milliseconds: 80 * i),
                         onTap: () {
                           KidsSound.instance.whoosh();
+                          AdManager().showInterstitial();
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(

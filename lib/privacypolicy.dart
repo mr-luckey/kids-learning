@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/widgets/adventure_background.dart';
 import 'package:kids/widgets/adventure_card.dart';
 
@@ -23,6 +24,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: AdventureBackground(
         child: SafeArea(
           child: Column(

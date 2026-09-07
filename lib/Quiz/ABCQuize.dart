@@ -6,6 +6,7 @@ import 'package:kids/homeScreen.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/widgets/kids_animations.dart';
 import 'package:kids/widgets/kids_bubble_title.dart';
 import 'package:kids/widgets/kids_quiz_screen.dart';
@@ -93,6 +94,7 @@ class _ResultSrceenState extends State<ResultSrceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: Stack(
           children: <Widget>[

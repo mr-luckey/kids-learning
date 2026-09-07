@@ -9,6 +9,8 @@ import 'package:kids/VideoLearning/Number%20video.dart';
 import 'package:kids/VideoLearning/ShapeVideo.dart';
 import 'package:kids/VideoLearning/VegitableVideo.dart';
 import 'package:kids/VideoLearning/colorvideo.dart';
+import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
@@ -106,6 +108,7 @@ class _VideoLearningState extends State<VideoLearning> {
 
   void _open(_VideoEntry entry) {
     KidsSound.instance.whoosh();
+    AdManager().showInterstitial();
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -118,6 +121,7 @@ class _VideoLearningState extends State<VideoLearning> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

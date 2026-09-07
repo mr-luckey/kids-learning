@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kids/Quiz/ABCQuize.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
@@ -210,6 +211,7 @@ class _KidsQuizScreenState extends State<KidsQuizScreen> {
     final bool isLast = _index + 1 >= _questionCount;
 
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: Stack(
           children: <Widget>[

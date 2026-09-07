@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/utils/model.dart';
@@ -110,6 +111,7 @@ class _KidsItemDetailState extends State<KidsItemDetail> {
     final bool isLetter = Kids3DLetter.isLetter(badge);
 
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

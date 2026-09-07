@@ -10,6 +10,8 @@ import 'package:kids/ListenGuessSongs/Month.dart';
 import 'package:kids/ListenGuessSongs/Number.dart';
 import 'package:kids/ListenGuessSongs/Shapes.dart';
 import 'package:kids/ListenGuessSongs/Vegitable.dart';
+import 'package:kids/utils/ad_helper.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
 import 'package:kids/widgets/kids_animations.dart';
@@ -124,6 +126,7 @@ class _ListenGuessState extends State<ListenGuess> {
       await flutterTts.speak(entry.speak);
     } catch (_) {}
     if (!mounted) return;
+    AdManager().showInterstitial();
     Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (BuildContext context) => entry.build()),
@@ -134,6 +137,7 @@ class _ListenGuessState extends State<ListenGuess> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KidsTheme.skyTop,
+      bottomNavigationBar: const BannerAdWidget(),
       body: KidsSkyBackground(
         child: SafeArea(
           child: Column(

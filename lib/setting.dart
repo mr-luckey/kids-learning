@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:kids/privacypolicy.dart';
+import 'package:kids/utils/banner_ad_widget.dart';
 import 'package:kids/widgets/adventure_background.dart';
 import 'package:kids/widgets/adventure_card.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +33,7 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: AdventureBackground(
         child: SafeArea(
           child: Column(

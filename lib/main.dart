@@ -5,8 +5,6 @@ import 'package:kids/homeScreen.dart';
 import 'package:kids/utils/ad_helper.dart';
 import 'package:kids/utils/kids_sound.dart';
 import 'package:kids/utils/kids_theme.dart';
-// import 'package:kids/Quiz/ABCQuize.dart';
-// import 'bottomnavigation.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
@@ -16,14 +14,14 @@ void main() async {
   await MobileAds.instance.initialize();
   AdManager().initialize();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
